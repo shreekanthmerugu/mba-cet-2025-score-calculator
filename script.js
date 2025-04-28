@@ -79,14 +79,15 @@ function parseHTML(htmlContent) {
     document.getElementById('va-score').innerText = `${va}/50`;
 
     document.getElementById('total-marks').innerText = `${totalCorrect}/200`;
+    document.getElementById('percentage').innerText = `${percentage}%`;
+}
 
+// ✅ This must be OUTSIDE parseHTML function
 function openGoogleForm() {
     window.open('https://forms.gle/uct6bLZr1a65P1Dx7', '_blank');
 }
 
-// Show the button after file upload parsing is done
+// ✅ This must also be OUTSIDE parseHTML function
 function showSubmitButton() {
     document.getElementById('submit-button').style.display = 'inline-block';
-}
-    document.getElementById('percentage').innerText = `${percentage}%`;
 }
