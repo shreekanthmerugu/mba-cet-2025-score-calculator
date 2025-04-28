@@ -10,47 +10,35 @@
 
   <h1>MBA CET 2025 Score Calculator</h1>
 
-  <div id="drop-area">
-    <p>📄 Drag & Drop your Response Sheet in HTML Format here</p>
-    <p>or</p>
-    <input type="file" id="fileInput" />
-  </div>
+  <div class="container">
+    <div class="card upload-card">
+      <h2>Upload Your Response Sheet</h2>
+      <input type="file" id="fileInput" />
+    </div>
 
-  <div class="section-container">
-
-    <div class="student-info hidden" id="student-info">
-      <h2>Student Details</h2>
+    <div class="card hidden" id="section-wise-summary">
+      <h2>Section Wise Summary</h2>
       <table>
-        <tr><td>Name:</td><td id="studentName">Unknown</td></tr>
-        <tr><td>Application ID:</td><td id="applicationId">Unknown</td></tr>
+        <tbody>
+          <tr><td>Logical Reasoning</td><td id="logicalScore">-</td></tr>
+          <tr><td>Abstract Reasoning</td><td id="abstractScore">-</td></tr>
+          <tr><td>Quantitative Aptitude</td><td id="quantScore">-</td></tr>
+          <tr><td>Verbal Ability</td><td id="verbalScore">-</td></tr>
+        </tbody>
       </table>
     </div>
 
-    <div class="summary-section hidden" id="score-summary">
+    <div class="card hidden" id="summary">
       <h2>Summary</h2>
-      <table id="summary-table"></table>
+      <table>
+        <tbody>
+          <tr><td>Total Questions</td><td id="totalQuestions">-</td></tr>
+          <tr><td>Correct Answers</td><td id="correctAnswers">-</td></tr>
+          <tr><td>Total Marks</td><td id="totalMarks">-</td></tr>
+          <tr><td>Percentage</td><td id="percentage">-</td></tr>
+        </tbody>
+      </table>
     </div>
-
-  </div>
-
-  <button id="submitButton" onclick="window.open('https://your-google-form-link', '_blank')">
-    Submit Your Response Sheet
-  </button>
-
-  <div class="questions hidden" id="questions-table">
-    <h2>Question Details</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>QID</th>
-          <th>Subject</th>
-          <th>Correct Option</th>
-          <th>User Option</th>
-          <th>Is Correct?</th>
-        </tr>
-      </thead>
-      <tbody id="questionRows"></tbody>
-    </table>
   </div>
 
   <script src="script.js"></script>
