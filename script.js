@@ -1,84 +1,90 @@
-document.getElementById('fileInput').addEventListener('change', handleFile);
+document.getElementById('fileInput').addEventListener('change', handleFileSelect);
 
-function handleFile(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    parseHTML(e.target.result);
-  };
-  reader.readAsText(file);
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const content = e.target.result;
+        parseResponseSheet(content);
+    };
+    reader.readAsText(file);
 }
 
-function parseHTML(html) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
+function parseResponseSheet(htmlContent) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
 
-  // Fetch Student Name and Application ID
-  try {
-    const name = doc.querySelector('table tbody tr:nth-child(1) td:nth-child(2)')?.innerText.trim();
-    const applicationId = doc.querySelector('table tbody tr:nth-child(2) td:nth-child(2)')?.innerText.trim();
-
-    if (name) document.getElementById('studentName').innerText = name;
-    if (applicationId) document.getElementById('applicationId').innerText = applicationId;
-
-    document.getElementById('studentInfo').classList.remove('hidden');
-  } catch (error) {
-    console.log('Error fetching name and ID');
-  }
-
-  const rows = Array.from(doc.querySelectorAll('#tblObjection tbody tr'));
-  
-  let totalQuestions = 0;
-  let correctAnswers = 0;
-  let logical = 0, abstract = 0, quant = 0, verbal = 0;
-  let logicalCorrect = 0, abstractCorrect = 0, quantCorrect = 0, verbalCorrect = 0;
-
-  rows.forEach((row) => {
-    const cells = row.querySelectorAll('td');
-    if (cells.length < 3) return;
-
-    const subject = cells[1]?.innerText.trim();
-    const optionsCell = cells[2];
-    const spans = optionsCell.querySelectorAll('span');
-    const correctOption = spans[0]?.innerText.trim();
-    const userOption = spans[1]?.innerText.trim();
-
-    if (!correctOption || !userOption) return;
-
-    const isCorrect = correctOption === userOption;
-
-    if (subject.includes('Logical')) {
-      logical++;
-      if (isCorrect) logicalCorrect++;
-    } else if (subject.includes('Abstract')) {
-      abstract++;
-      if (isCorrect) abstractCorrect++;
-    } else if (subject.includes('Quantitative')) {
-      quant++;
-      if (isCorrect) quantCorrect++;
-    } else if (subject.includes('Verbal')) {
-      verbal++;
-      if (isCorrect) verbalCorrect++;
+    // Fetch Name and Application ID
+    const navText = doc.querySelector('.navbar-nav .nav-link span.hidden-sm.hidden-md')?.textContent.trim();
+    if (navText) {
+        const [appId, ...nameParts] = navText.split(' - ');
+        document.getElementById('student-name').textContent = nameParts.join(' - ');
+        document.getElementById('application-id').textContent = appId;
     }
 
-    totalQuestions++;
-    if (isCorrect) correctAnswers++;
-  });
+    document.getElementById('student-details').classList.remove('hidden');
 
-  const totalMarks = correctAnswers;
-  const percentage = ((correctAnswers / totalQuestions) * 100).toFixed(2);
+    // Parse question details
+    const rows = [...doc.querySelectorAll('#tblObjection tr')].slice(1); // skipping header
 
-  document.getElementById('logicalScore').innerText = `${logicalCorrect}/${logical}`;
-  document.getElementById('abstractScore').innerText = `${abstractCorrect}/${abstract}`;
-  document.getElementById('quantScore').innerText = `${quantCorrect}/${quant}`;
-  document.getElementById('verbalScore').innerText = `${verbalCorrect}/${verbal}`;
+    let correctCount = 0;
+    let logical = 0, abstract = 0, quant = 0, verbal = 0;
 
-  document.getElementById('totalQuestions').innerText = totalQuestions;
-  document.getElementById('correctAnswers').innerText = correctAnswers;
-  document.getElementById('totalMarks').innerText = `${totalMarks}/${totalQuestions}`;
-  document.getElementById('percentage').innerText = `${percentage}%`;
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length < 2) return; // skip if invalid
 
-  document.getElementById('section-wise-summary').classList.remove('hidden');
-  document.getElementById('summary').classList.remove('hidden');
+        const questionId = cells[0].textContent.trim();
+        const section = cells[1].textContent.trim();
+        const correctOption = cells[2].querySelector('table tr td b:contains("Correct Option:") ~ span')?.textContent.trim();
+        const candidateResponse = cells[2].querySelector('table tr td b:contains("Candidate Response:") ~ span')?.textContent.trim();
+
+        let isCorrect = false;
+        if (correctOption && candidateResponse) {
+            isCorrect = correctOption === candidateResponse;
+            if (isCorrect) correctCount++;
+
+            switch (section) {
+                case 'Logical Reasoning':
+                    logical += isCorrect ? 1 : 0;
+                    break;
+                case 'Abstract Reasoning':
+                    abstract += isCorrect ? 1 : 0;
+                    break;
+                case 'Quantitative Aptitude':
+                    quant += isCorrect ? 1 : 0;
+                    break;
+                case 'Verbal Ability':
+                    verbal += isCorrect ? 1 : 0;
+                    break;
+            }
+        }
+
+        const rowHtml = `
+            <tr>
+                <td>${questionId}</td>
+                <td>${section}</td>
+                <td>${correctOption || '-'}</td>
+                <td>${candidateResponse || '-'}</td>
+                <td>${isCorrect ? 'Yes' : 'No'}</td>
+            </tr>
+        `;
+        document.getElementById('questions-body').insertAdjacentHTML('beforeend', rowHtml);
+    });
+
+    document.getElementById('logical-reasoning').textContent = `${logical}/75`;
+    document.getElementById('abstract-reasoning').textContent = `${abstract}/25`;
+    document.getElementById('quantitative-aptitude').textContent = `${quant}/50`;
+    document.getElementById('verbal-ability').textContent = `${verbal}/50`;
+
+    document.getElementById('total-questions').textContent = 200;
+    document.getElementById('correct-answers').textContent = correctCount;
+    document.getElementById('total-marks').textContent = `${correctCount}/200`;
+    document.getElementById('percentage').textContent = `${((correctCount/200)*100).toFixed(2)}%`;
+
+    document.getElementById('section-summary').classList.remove('hidden');
+    document.getElementById('score-summary').classList.remove('hidden');
+    document.getElementById('questions-table').classList.remove('hidden');
 }
