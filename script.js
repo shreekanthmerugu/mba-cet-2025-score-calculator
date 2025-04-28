@@ -17,29 +17,16 @@ function parseHTML(htmlContent) {
     const doc = parser.parseFromString(htmlContent, 'text/html');
 
     // ✅ Correctly fetch Name and Application ID
-    const table = doc.querySelector('table.table.table-bordered');
-    let name = '-';
-    let applicationId = '-';
-
-    if (table) {
-        const rows = table.querySelectorAll('tr');
-        rows.forEach(row => {
-            const th = row.querySelector('th');
-            const td = row.querySelector('td');
-            if (th && td) {
-                const heading = th.textContent.trim().toLowerCase();
-                const value = td.textContent.trim();
-                if (heading.includes('candidate name')) {
-                    name = value;
-                } else if (heading.includes('application id')) {
-                    applicationId = value;
-                }
-            }
-        });
+    const span = doc.querySelector('span.hidden-sm.hidden-md');
+    if (span) {
+        const textContent = span.textContent.trim();
+        const [applicationId, name] = textContent.split(' - ').map(item => item.trim());
+        document.getElementById('appId').textContent = applicationId || "-";
+        document.getElementById('name').textContent = name || "-";
+    } else {
+        document.getElementById('appId').textContent = "-";
+        document.getElementById('name').textContent = "-";
     }
-
-    document.getElementById('student-name').textContent = name;
-    document.getElementById('application-id').textContent = applicationId;
 
     const rows = Array.from(doc.querySelectorAll('tbody tr'));
     const tbody = document.querySelector('#question-table tbody');
