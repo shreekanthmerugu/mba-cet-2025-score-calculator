@@ -1,119 +1,126 @@
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+document.getElementById('fileInput').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      calculateScore(e.target.result);
+    };
+    reader.readAsText(file);
+  }
+});
 
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #121212;
-  color: #ffffff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+function calculateScore(htmlString) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
 
-.container {
-  padding: 40px 20px;
-  width: 100%;
-  max-width: 1200px;
-  text-align: center;
-}
+  // Extract Student Name and Application ID
+  const spans = doc.querySelectorAll('span');
+  let studentName = 'Unknown';
+  let applicationID = 'Unknown';
 
-h1 {
-  font-size: 30px;
-  margin-bottom: 25px;
-  font-weight: 600;
-}
+  spans.forEach(span => {
+    if (span.textContent.includes('Name')) {
+      studentName = span.nextElementSibling?.textContent.trim() || 'Unknown';
+    }
+    if (span.textContent.includes('Application')) {
+      applicationID = span.nextElementSibling?.textContent.trim() || 'Unknown';
+    }
+  });
 
-.upload-box {
-  border: 2px dashed rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  padding: 40px 20px;
-  border-radius: 15px;
-  transition: background 0.3s;
-  margin-bottom: 30px;
-}
+  document.getElementById('studentInfo').innerHTML = `
+    <h2>Student Details</h2>
+    <p><strong>Name:</strong> ${studentName}</p>
+    <p><strong>Application ID:</strong> ${applicationID}</p>
+  `;
 
-.upload-box:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
+  // Now parse the questions
+  const tables = doc.querySelectorAll('table.table-bordered.center');
 
-.upload-box p {
-  margin: 10px 0;
-  font-size: 18px;
-  color: #cccccc;
-}
+  let totalQuestions = 0;
+  let correctAnswers = 0;
 
-#fileInput {
-  margin-top: 15px;
-}
+  let logicalCorrect = 0;
+  let abstractCorrect = 0;
+  let quantCorrect = 0;
+  let verbalCorrect = 0;
 
-.info-box, .summary-box, .result-box {
-  margin-top: 20px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  padding: 25px 20px;
-  border-radius: 15px;
-  width: 100%;
-}
+  let questionNumber = 1;
+  let fullResultHTML = `
+    <table class="result-table">
+      <tr>
+        <th>Q.No</th>
+        <th>Subject</th>
+        <th>Correct Option</th>
+        <th>User Option</th>
+        <th>Is Correct?</th>
+      </tr>
+  `;
 
-footer {
-  margin-top: 40px;
-  padding-bottom: 20px;
-  font-size: 14px;
-  color: #FFD700;
-}
+  tables.forEach(table => {
+    const spans = table.querySelectorAll('span');
+    if (spans.length >= 2) {
+      const correctOption = spans[0].textContent.trim();
+      const candidateResponse = spans[1].textContent.trim();
 
-.result-table {
-  width: 100%;
-  margin-top: 20px;
-  border-collapse: collapse;
-}
+      if (correctOption && candidateResponse) {
+        totalQuestions++;
 
-.result-table th, .result-table td {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px;
-  text-align: center;
-}
+        let subject = '';
+        if (questionNumber <= 75) {
+          subject = 'Logical Reasoning';
+        } else if (questionNumber <= 100) {
+          subject = 'Abstract Reasoning';
+        } else if (questionNumber <= 150) {
+          subject = 'Quantitative Aptitude';
+        } else {
+          subject = 'Verbal Ability';
+        }
 
-.result-table th {
-  background-color: rgba(255, 255, 255, 0.1);
-  font-weight: bold;
-  color: #FFD700;
-}
+        let isCorrect = (correctOption === candidateResponse);
+        if (isCorrect) {
+          correctAnswers++;
+          if (questionNumber <= 75) logicalCorrect++;
+          else if (questionNumber <= 100) abstractCorrect++;
+          else if (questionNumber <= 150) quantCorrect++;
+          else verbalCorrect++;
+        }
 
-.badge-yes {
-  background: #00c853;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 8px;
-  font-weight: bold;
-}
+        fullResultHTML += `
+          <tr>
+            <td>${questionNumber}</td>
+            <td>${subject}</td>
+            <td>${correctOption}</td>
+            <td>${candidateResponse}</td>
+            <td><span class="${isCorrect ? 'badge-yes' : 'badge-no'}">${isCorrect ? 'Yes' : 'No'}</span></td>
+          </tr>
+        `;
 
-.badge-no {
-  background: #d50000;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 8px;
-  font-weight: bold;
-}
+        questionNumber++;
+      }
+    }
+  });
 
-.upload-btn {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 12px 24px;
-  background-color: #FFD700;
-  color: #000;
-  text-decoration: none;
-  font-weight: 600;
-  border-radius: 8px;
-  transition: background 0.3s;
-}
+  fullResultHTML += `</table>`;
 
-.upload-btn:hover {
-  background-color: #ffcc00;
+  const percentage = ((correctAnswers / totalQuestions) * 100).toFixed(2);
+
+  document.getElementById('summary').innerHTML = `
+    <h2>Summary</h2>
+    <p><strong>Total Questions:</strong> ${totalQuestions}</p>
+    <p><strong>Correct Answers:</strong> ${correctAnswers}</p>
+    <p><strong>Percentage:</strong> ${percentage}%</p>
+    <p><strong>Total Marks:</strong> ${correctAnswers}/200</p>
+    <p><strong>Logical Reasoning:</strong> ${logicalCorrect}/75</p>
+    <p><strong>Abstract Reasoning:</strong> ${abstractCorrect}/25</p>
+    <p><strong>Quantitative Aptitude:</strong> ${quantCorrect}/50</p>
+    <p><strong>Verbal Ability:</strong> ${verbalCorrect}/50</p>
+    <div class="important-message" style="margin-top:20px;">
+      📸 <b>Please take a screenshot of this page and upload it in the Google Form to verify your scores.</b>
+    </div>
+    <div style="margin-top:20px;">
+      <a href="YOUR_GOOGLE_FORM_LINK_HERE" target="_blank" class="upload-btn">Submit Your Response Sheet</a>
+    </div>
+  `;
+
+  document.getElementById('result').innerHTML = fullResultHTML;
 }
