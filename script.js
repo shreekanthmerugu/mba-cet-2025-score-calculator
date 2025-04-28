@@ -1,126 +1,92 @@
-document.getElementById('fileInput').addEventListener('change', function(event) {
+document.getElementById('fileInput').addEventListener('change', handleFile);
+
+function handleFile(event) {
   const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      calculateScore(e.target.result);
-    };
-    reader.readAsText(file);
-  }
-});
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    parseHTML(e.target.result);
+  };
+  reader.readAsText(file);
+}
 
-function calculateScore(htmlString) {
+function parseHTML(html) {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlString, 'text/html');
+  const doc = parser.parseFromString(html, 'text/html');
 
-  // Extract Student Name and Application ID
-  const spans = doc.querySelectorAll('span');
-  let studentName = 'Unknown';
-  let applicationID = 'Unknown';
+  // Name and Application ID
+  const userInfo = doc.querySelector('.nav-link.dropdown-toggle span')?.innerText.trim() || "Unknown";
+  const [applicationId, ...nameParts] = userInfo.split(' - ');
+  const name = nameParts.join(' ');
 
-  spans.forEach(span => {
-    if (span.textContent.includes('Name')) {
-      studentName = span.nextElementSibling?.textContent.trim() || 'Unknown';
-    }
-    if (span.textContent.includes('Application')) {
-      applicationID = span.nextElementSibling?.textContent.trim() || 'Unknown';
-    }
-  });
+  document.getElementById('studentName').innerText = name || 'Unknown';
+  document.getElementById('applicationId').innerText = applicationId || 'Unknown';
+  document.getElementById('student-info').classList.remove('hidden');
 
-  document.getElementById('studentInfo').innerHTML = `
-    <h2>Student Details</h2>
-    <p><strong>Name:</strong> ${studentName}</p>
-    <p><strong>Application ID:</strong> ${applicationID}</p>
-  `;
-
-  // Now parse the questions
-  const tables = doc.querySelectorAll('table.table-bordered.center');
+  // Questions
+  const rows = Array.from(doc.querySelectorAll('#tblObjection tr')).slice(1);
+  const questionRows = document.getElementById('questionRows');
+  questionRows.innerHTML = "";
 
   let totalQuestions = 0;
   let correctAnswers = 0;
+  let logical = 0, abstract = 0, quant = 0, verbal = 0;
+  let logicalCorrect = 0, abstractCorrect = 0, quantCorrect = 0, verbalCorrect = 0;
 
-  let logicalCorrect = 0;
-  let abstractCorrect = 0;
-  let quantCorrect = 0;
-  let verbalCorrect = 0;
+  rows.forEach((row, index) => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length < 4) return;
 
-  let questionNumber = 1;
-  let fullResultHTML = `
-    <table class="result-table">
-      <tr>
-        <th>Q.No</th>
-        <th>Subject</th>
-        <th>Correct Option</th>
-        <th>User Option</th>
-        <th>Is Correct?</th>
-      </tr>
-  `;
+    const questionId = cells[0].innerText.trim();
+    const subject = cells[1].innerText.trim();
+    const correctOption = cells[2].querySelector('span:nth-child(1)')?.innerText.trim();
+    const userOption = cells[2].querySelector('span:nth-child(2)')?.innerText.trim();
 
-  tables.forEach(table => {
-    const spans = table.querySelectorAll('span');
-    if (spans.length >= 2) {
-      const correctOption = spans[0].textContent.trim();
-      const candidateResponse = spans[1].textContent.trim();
+    const isCorrect = correctOption === userOption;
 
-      if (correctOption && candidateResponse) {
-        totalQuestions++;
-
-        let subject = '';
-        if (questionNumber <= 75) {
-          subject = 'Logical Reasoning';
-        } else if (questionNumber <= 100) {
-          subject = 'Abstract Reasoning';
-        } else if (questionNumber <= 150) {
-          subject = 'Quantitative Aptitude';
-        } else {
-          subject = 'Verbal Ability';
-        }
-
-        let isCorrect = (correctOption === candidateResponse);
-        if (isCorrect) {
-          correctAnswers++;
-          if (questionNumber <= 75) logicalCorrect++;
-          else if (questionNumber <= 100) abstractCorrect++;
-          else if (questionNumber <= 150) quantCorrect++;
-          else verbalCorrect++;
-        }
-
-        fullResultHTML += `
-          <tr>
-            <td>${questionNumber}</td>
-            <td>${subject}</td>
-            <td>${correctOption}</td>
-            <td>${candidateResponse}</td>
-            <td><span class="${isCorrect ? 'badge-yes' : 'badge-no'}">${isCorrect ? 'Yes' : 'No'}</span></td>
-          </tr>
-        `;
-
-        questionNumber++;
-      }
+    if (subject.includes('Logical')) {
+      logical++;
+      if (isCorrect) logicalCorrect++;
+    } else if (subject.includes('Abstract')) {
+      abstract++;
+      if (isCorrect) abstractCorrect++;
+    } else if (subject.includes('Quantitative')) {
+      quant++;
+      if (isCorrect) quantCorrect++;
+    } else if (subject.includes('Verbal')) {
+      verbal++;
+      if (isCorrect) verbalCorrect++;
     }
+
+    totalQuestions++;
+    if (isCorrect) correctAnswers++;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${subject}</td>
+      <td>${correctOption}</td>
+      <td>${userOption}</td>
+      <td><span class="${isCorrect ? 'yes' : 'no'}">${isCorrect ? 'Yes' : 'No'}</span></td>
+    `;
+    questionRows.appendChild(tr);
   });
 
-  fullResultHTML += `</table>`;
+  document.getElementById('questions-table').classList.remove('hidden');
 
-  const percentage = ((correctAnswers / totalQuestions) * 100).toFixed(2);
-
-  document.getElementById('summary').innerHTML = `
-    <h2>Summary</h2>
-    <p><strong>Total Questions:</strong> ${totalQuestions}</p>
-    <p><strong>Correct Answers:</strong> ${correctAnswers}</p>
-    <p><strong>Percentage:</strong> ${percentage}%</p>
-    <p><strong>Total Marks:</strong> ${correctAnswers}/200</p>
-    <p><strong>Logical Reasoning:</strong> ${logicalCorrect}/75</p>
-    <p><strong>Abstract Reasoning:</strong> ${abstractCorrect}/25</p>
-    <p><strong>Quantitative Aptitude:</strong> ${quantCorrect}/50</p>
-    <p><strong>Verbal Ability:</strong> ${verbalCorrect}/50</p>
-    <div class="important-message" style="margin-top:20px;">
-      📸 <b>Please take a screenshot of this page and upload it in the Google Form to verify your scores.</b>
-    </div>
-    <div style="margin-top:20px;">
-      <a href="YOUR_GOOGLE_FORM_LINK_HERE" target="_blank" class="upload-btn">Submit Your Response Sheet</a>
-    </div>
+  // Summary
+  const totalMarks = correctAnswers;
+  const summaryTable = document.getElementById('summary-table');
+  summaryTable.innerHTML = `
+    <tr><td><strong>Total Questions:</strong></td><td>${totalQuestions}</td></tr>
+    <tr><td><strong>Correct Answers:</strong></td><td>${correctAnswers}</td></tr>
+    <tr><td><strong>Percentage:</strong></td><td>${((correctAnswers / totalQuestions) * 100).toFixed(2)}%</td></tr>
+    <tr><td><strong>Total Marks:</strong></td><td>${totalMarks}/${totalQuestions}</td></tr>
+    <tr><td><strong>Logical Reasoning:</strong></td><td>${logicalCorrect}/${logical}</td></tr>
+    <tr><td><strong>Abstract Reasoning:</strong></td><td>${abstractCorrect}/${abstract}</td></tr>
+    <tr><td><strong>Quantitative Aptitude:</strong></td><td>${quantCorrect}/${quant}</td></tr>
+    <tr><td><strong>Verbal Ability:</strong></td><td>${verbalCorrect}/${verbal}</td></tr>
   `;
 
-  document.getElementById('result').innerHTML = fullResultHTML;
+  document.getElementById('score-summary').classList.remove('hidden');
 }
