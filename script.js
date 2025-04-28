@@ -41,12 +41,15 @@ function parseHTML(html) {
 
   rows.forEach((row, index) => {
     const cells = row.querySelectorAll('td');
-    if (cells.length < 4) return;
+    if (cells.length < 3) return;
 
     const questionId = cells[0]?.innerText.trim();
     const subject = cells[1]?.innerText.trim();
-    const correctOption = cells[2]?.innerText.trim();
-    const userOption = cells[3]?.innerText.trim();
+    
+    const optionsCell = cells[2];
+    const spans = optionsCell.querySelectorAll('span');
+    const correctOption = spans[0]?.innerText.trim();
+    const userOption = spans[1]?.innerText.trim();
 
     if (!correctOption || !userOption) return;
 
