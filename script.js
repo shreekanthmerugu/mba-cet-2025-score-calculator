@@ -1,3 +1,14 @@
+document.getElementById('fileInput').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      calculateScore(e.target.result);
+    };
+    reader.readAsText(file);
+  }
+});
+
 function calculateScore(htmlString) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, 'text/html');
@@ -26,7 +37,6 @@ function calculateScore(htmlString) {
         if (correctOption === candidateResponse) {
           correctAnswers++;
 
-          // Section wise bifurcation based on question number
           if (questionNumber <= 75) {
             logicalCorrect++;
           } else if (questionNumber <= 100) {
@@ -52,16 +62,15 @@ function calculateScore(htmlString) {
     <p>🎨 Abstract Reasoning: ${abstractCorrect}/25</p>
     <p>📈 Quantitative Aptitude: ${quantCorrect}/50</p>
     <p>📚 Verbal Ability: ${verbalCorrect}/50</p>
-    <hr style="margin: 20px 0; opacity: 0.3;">
+    <hr>
     <h3>🏆 Total Marks: ${totalMarks}/200</h3>
 
     <div style="margin-top:20px;">
-      <a href="https://forms.gle/bJuYM9xk4tPzSVXu9" target="_blank" class="upload-btn">Submit Your Response Sheet</a>
+      <a href="YOUR_GOOGLE_FORM_LINK_HERE" target="_blank" class="upload-btn">Submit Your Response Sheet</a>
     </div>
   `;
 
   setTimeout(() => {
-    resultBox.style.transition = "opacity 0.8s ease";
     resultBox.style.opacity = 1;
   }, 100);
 }
