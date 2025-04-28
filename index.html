@@ -2,32 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MBA CET 2025 Score Calculator</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <div class="container">
     <h1>MBA CET 2025 Score Calculator</h1>
 
-    <div class="upload-box" id="upload-box">
-      <p>📄 Drag & Drop your Response Sheet in HTML Format here</p>
-      <p>or</p>
+    <div class="upload-area" id="upload-area">
+      <p>📄 Drag & Drop your Response Sheet in HTML Format here<br>or</p>
       <input type="file" id="fileInput" accept=".html">
     </div>
 
-    <div id="studentInfo" class="info-box"></div>
+    <div id="student-info" class="card hidden">
+      <h2>Student Details</h2>
+      <table>
+        <tr><td><strong>Name:</strong></td><td id="studentName">Unknown</td></tr>
+        <tr><td><strong>Application ID:</strong></td><td id="applicationId">Unknown</td></tr>
+      </table>
+    </div>
 
-    <div id="summary" class="summary-box"></div>
+    <div id="score-summary" class="card hidden">
+      <h2>Summary</h2>
+      <table id="summary-table">
+        <!-- Filled dynamically -->
+      </table>
+      <p class="screenshot-text">
+        📸 Please take a screenshot of this page and upload it in the Google Form to verify your scores
+      </p>
+      <a id="formLink" href="https://your-google-form-link" target="_blank">
+        <button class="submit-btn">Submit Your Response Sheet</button>
+      </a>
+    </div>
 
-    <div id="result" class="result-box"></div>
-
+    <div id="questions-table" class="card hidden">
+      <h2>Question Details</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Q.No</th>
+            <th>Subject</th>
+            <th>Correct Option</th>
+            <th>User Option</th>
+            <th>Is Correct?</th>
+          </tr>
+        </thead>
+        <tbody id="questionRows">
+          <!-- Filled dynamically -->
+        </tbody>
+      </table>
+    </div>
   </div>
-
-  <footer>
-    Built by The Top Percentile
-  </footer>
 
   <script src="script.js"></script>
 </body>
