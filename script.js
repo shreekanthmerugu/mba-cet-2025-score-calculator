@@ -66,7 +66,7 @@ function calculateScore(htmlString) {
     <h3>🏆 Total Marks: ${totalMarks}/200</h3>
 
     <div style="margin-top:20px;">
-      <a href="YOUR_GOOGLE_FORM_LINK_HERE" target="_blank" class="upload-btn">Submit Your Response Sheet</a>
+      <a href="https://forms.gle/AB1GPH1cLLck8wVS8" target="_blank" class="upload-btn">Submit Your Response Sheet</a>
     </div>
   `;
 
