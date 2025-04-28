@@ -1,4 +1,4 @@
-/* Reset basic styles */
+/* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -6,37 +6,35 @@
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
-  background: #121212;
+  font-family: 'Arial', sans-serif;
+  background-color: #121212;
   color: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
 }
 
 .container {
   padding: 40px 20px;
   width: 100%;
   max-width: 900px;
+  text-align: center;
 }
 
 h1 {
-  font-size: 32px;
-  margin-bottom: 30px;
+  font-size: 30px;
+  margin-bottom: 25px;
   font-weight: 600;
-  color: #ffffff;
 }
 
-/* Upload box styling */
 .upload-box {
   border: 2px dashed rgba(255, 255, 255, 0.3);
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
-  padding: 50px 20px;
+  padding: 40px 20px;
   border-radius: 15px;
-  transition: 0.3s;
+  transition: background 0.3s;
 }
 
 .upload-box:hover {
@@ -53,7 +51,6 @@ h1 {
   margin-top: 15px;
 }
 
-/* Result box */
 .result-box {
   margin-top: 30px;
   padding: 30px 20px;
@@ -61,19 +58,40 @@ h1 {
   backdrop-filter: blur(10px);
   border-radius: 15px;
   box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  transition: opacity 0.8s ease;
 }
 
-.result-box h3 {
+.result-box h3, .result-box p {
   margin: 12px 0;
-  font-size: 22px;
-  color: #4fc3f7;
+  font-size: 20px;
   font-weight: 500;
 }
 
-/* Footer */
+.result-box hr {
+  margin: 20px 0;
+  opacity: 0.3;
+}
+
 footer {
   margin-top: 40px;
   padding-bottom: 20px;
   font-size: 14px;
   color: #FFD700;
+}
+
+/* Upload Button style */
+.upload-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #FFD700;
+  color: #000;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.upload-btn:hover {
+  background-color: #ffcc00;
 }
