@@ -16,11 +16,21 @@ function parseHTML(htmlContent) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlContent, 'text/html');
 
-    const nameElement = doc.querySelector('.col-12.text-center h5');
-    const applicationIdElement = doc.querySelector('.col-12.text-center p');
+    // Correctly fetch Name and Application ID
+    const studentDetails = doc.querySelector('.studentDetailsContainer');
+    let name = '-';
+    let applicationId = '-';
 
-    document.getElementById('student-name').textContent = nameElement ? nameElement.innerText.trim() : '-';
-    document.getElementById('application-id').textContent = applicationIdElement ? applicationIdElement.innerText.trim().split(':')[1] : '-';
+    if (studentDetails) {
+        const nameElement = studentDetails.querySelector('h5');
+        const appIdElement = studentDetails.querySelector('p');
+
+        if (nameElement) name = nameElement.textContent.trim();
+        if (appIdElement) applicationId = appIdElement.textContent.trim().replace('Application ID:', '').trim();
+    }
+
+    document.getElementById('student-name').textContent = name;
+    document.getElementById('application-id').textContent = applicationId;
 
     const rows = Array.from(doc.querySelectorAll('tbody tr'));
     const tbody = document.querySelector('#question-table tbody');
