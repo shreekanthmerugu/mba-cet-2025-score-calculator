@@ -31,13 +31,19 @@ function parseHTML(htmlContent, slot) {
     }
 
     const rows = Array.from(doc.querySelectorAll('tbody tr'));
-    let totalCorrect = 0;
+    const tbody = document.querySelector('#question-table tbody');
+    tbody.innerHTML = '';
+
+    let lr = 0, ar = 0, qa = 0, va = 0, totalCorrect = 0;
     const totalQuestions = 200;
 
     rows.forEach(row => {
         const cells = row.querySelectorAll('td');
         if (cells.length >= 3) {
+            const questionId = cells[0].innerText.trim();
+            const subject = cells[1].innerText.trim();
             const optionsText = cells[2].innerText.trim();
+
             const correctOptionMatch = optionsText.match(/Correct Option:\s*(\d+)/);
             const candidateResponseMatch = optionsText.match(/Candidate Response:\s*(\d+)/);
 
@@ -45,15 +51,35 @@ function parseHTML(htmlContent, slot) {
             const userOption = candidateResponseMatch ? candidateResponseMatch[1] : '-';
 
             const isCorrect = (correctOption === userOption) ? 'Yes' : 'No';
-            if (isCorrect === 'Yes') totalCorrect++;
+
+            if (isCorrect === 'Yes') {
+                if (subject === "Logical Reasoning") lr++;
+                else if (subject === "Abstract Reasoning") ar++;
+                else if (subject === "Quantitative Aptitude") qa++;
+                else if (subject === "Verbal Ability") va++;
+                totalCorrect++;
+            }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${questionId}</td>
+                <td>${subject}</td>
+                <td>${correctOption}</td>
+                <td>${userOption}</td>
+                <td class="${isCorrect === 'Yes' ? 'is-correct-yes' : 'is-correct-no'}">${isCorrect}</td>
+            `;
+            tbody.appendChild(tr);
         }
     });
+
+    const percentage = ((totalCorrect / totalQuestions) * 100).toFixed(2);
 
     document.getElementById('name').textContent = name;
     document.getElementById('appId').textContent = applicationId;
     document.getElementById('total-marks').textContent = `${totalCorrect}/200`;
-    document.getElementById('percentage').textContent = `${((totalCorrect / totalQuestions) * 100).toFixed(2)}%`;
+    document.getElementById('percentage').textContent = `${percentage}%`;
 
+    // ➡️ After all parsing, open the Google Form
     openGoogleForm(name, applicationId, slot, totalCorrect);
 }
 
