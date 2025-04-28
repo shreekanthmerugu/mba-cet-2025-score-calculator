@@ -1,76 +1,119 @@
-document.getElementById('fileInput').addEventListener('change', function(event) {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      calculateScore(e.target.result);
-    };
-    reader.readAsText(file);
-  }
-});
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-function calculateScore(htmlString) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlString, 'text/html');
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #121212;
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  let totalQuestions = 0;
-  let correctAnswers = 0;
+.container {
+  padding: 40px 20px;
+  width: 100%;
+  max-width: 1200px;
+  text-align: center;
+}
 
-  let logicalCorrect = 0;
-  let abstractCorrect = 0;
-  let quantCorrect = 0;
-  let verbalCorrect = 0;
+h1 {
+  font-size: 30px;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
 
-  const tables = doc.querySelectorAll('table.table-bordered.center');
+.upload-box {
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  padding: 40px 20px;
+  border-radius: 15px;
+  transition: background 0.3s;
+  margin-bottom: 30px;
+}
 
-  let questionNumber = 1;
+.upload-box:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
 
-  tables.forEach(table => {
-    const spans = table.querySelectorAll('span');
-    if (spans.length >= 2) {
-      const correctOption = spans[0].textContent.trim();
-      const candidateResponse = spans[1].textContent.trim();
+.upload-box p {
+  margin: 10px 0;
+  font-size: 18px;
+  color: #cccccc;
+}
 
-      if (correctOption && candidateResponse) {
-        totalQuestions++;
+#fileInput {
+  margin-top: 15px;
+}
 
-        if (correctOption === candidateResponse) {
-          correctAnswers++;
+.info-box, .summary-box, .result-box {
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  padding: 25px 20px;
+  border-radius: 15px;
+  width: 100%;
+}
 
-          if (questionNumber <= 75) {
-            logicalCorrect++;
-          } else if (questionNumber <= 100) {
-            abstractCorrect++;
-          } else if (questionNumber <= 150) {
-            quantCorrect++;
-          } else {
-            verbalCorrect++;
-          }
-        }
-        questionNumber++;
-      }
-    }
-  });
+footer {
+  margin-top: 40px;
+  padding-bottom: 20px;
+  font-size: 14px;
+  color: #FFD700;
+}
 
-  const totalMarks = correctAnswers;
+.result-table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
 
-  const resultBox = document.getElementById('result');
-  resultBox.style.opacity = 0;
-  resultBox.innerHTML = `
-    <h3>Section-Wise Scores:</h3>
-    <p>🧠 Logical Reasoning: ${logicalCorrect}/75</p>
-    <p>🎨 Abstract Reasoning: ${abstractCorrect}/25</p>
-    <p>📈 Quantitative Aptitude: ${quantCorrect}/50</p>
-    <p>📚 Verbal Ability: ${verbalCorrect}/50</p>
-    <hr>
-    <h3>🏆 Total Marks: ${totalMarks}/200</h3>
+.result-table th, .result-table td {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  text-align: center;
+}
 
-    <div style="margin-top:20px;">
-      <a href="https://forms.gle/AB1GPH1cLLck8wVS8" target="_blank" class="upload-btn">Submit Your Response Sheet</a>
-    </div>
-  `;
+.result-table th {
+  background-color: rgba(255, 255, 255, 0.1);
+  font-weight: bold;
+  color: #FFD700;
+}
 
-  setTimeout(() => {
-    resultBox.style.opacity = 1;
-  }, 100);
+.badge-yes {
+  background: #00c853;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.badge-no {
+  background: #d50000;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.upload-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #FFD700;
+  color: #000;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.upload-btn:hover {
+  background-color: #ffcc00;
 }
