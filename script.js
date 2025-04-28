@@ -8,6 +8,7 @@ function handleFileUpload(event) {
     reader.onload = function(e) {
         const htmlContent = e.target.result;
         parseHTML(htmlContent);
+        showSubmitButton();
     };
     reader.readAsText(file);
 }
@@ -78,5 +79,14 @@ function parseHTML(htmlContent) {
     document.getElementById('va-score').innerText = `${va}/50`;
 
     document.getElementById('total-marks').innerText = `${totalCorrect}/200`;
+
+function openGoogleForm() {
+    window.open('https://forms.gle/uct6bLZr1a65P1Dx7', '_blank');
+}
+
+// Show the button after file upload parsing is done
+function showSubmitButton() {
+    document.getElementById('submit-button').style.display = 'inline-block';
+}
     document.getElementById('percentage').innerText = `${percentage}%`;
 }
