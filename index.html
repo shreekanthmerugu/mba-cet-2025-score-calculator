@@ -1,52 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>MBA CET 2025 Score Calculator</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBA CET 2025 Score Calculator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="container">
+        <h1>MBA CET 2025 Score Calculator</h1>
 
-  <h1>MBA CET 2025 Score Calculator</h1>
+        <div id="student-details" class="card hidden">
+            <p><strong>Name:</strong> <span id="student-name"></span></p>
+            <p><strong>Application ID:</strong> <span id="application-id"></span></p>
+        </div>
 
-  <div class="student-info hidden" id="studentInfo">
-    <p><strong>Name:</strong> <span id="studentName">-</span></p>
-    <p><strong>Application ID:</strong> <span id="applicationId">-</span></p>
-  </div>
+        <div class="main-cards">
+            <div class="card" id="upload-section">
+                <h2>Upload Your Response Sheet</h2>
+                <input type="file" id="fileInput" accept=".html">
+            </div>
 
-  <div class="container">
-    <div class="card upload-card">
-      <h2>Upload Your Response Sheet</h2>
-      <input type="file" id="fileInput" />
+            <div class="card" id="section-summary" class="hidden">
+                <h2>Section Wise Summary</h2>
+                <p>Logical Reasoning: <span id="logical-reasoning"></span></p>
+                <p>Abstract Reasoning: <span id="abstract-reasoning"></span></p>
+                <p>Quantitative Aptitude: <span id="quantitative-aptitude"></span></p>
+                <p>Verbal Ability: <span id="verbal-ability"></span></p>
+            </div>
+
+            <div class="card" id="score-summary" class="hidden">
+                <h2>Summary</h2>
+                <p>Total Questions: <span id="total-questions"></span></p>
+                <p>Total Score: <span id="correct-answers"></span></p>
+                <p>Total Marks: <span id="total-marks"></span></p>
+                <p>Percentage: <span id="percentage"></span></p>
+            </div>
+        </div>
+
+        <div id="questions-table" class="card hidden">
+            <h2>Question Details</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Question ID</th>
+                        <th>Subject</th>
+                        <th>Correct Option</th>
+                        <th>User Option</th>
+                        <th>Is Correct?</th>
+                    </tr>
+                </thead>
+                <tbody id="questions-body">
+                    <!-- filled dynamically -->
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
-    <div class="card hidden" id="section-wise-summary">
-      <h2>Section Wise Summary</h2>
-      <table>
-        <tbody>
-          <tr><td>Logical Reasoning</td><td id="logicalScore">-</td></tr>
-          <tr><td>Abstract Reasoning</td><td id="abstractScore">-</td></tr>
-          <tr><td>Quantitative Aptitude</td><td id="quantScore">-</td></tr>
-          <tr><td>Verbal Ability</td><td id="verbalScore">-</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card hidden" id="summary">
-      <h2>Summary</h2>
-      <table>
-        <tbody>
-          <tr><td>Total Questions</td><td id="totalQuestions">-</td></tr>
-          <tr><td>Total Score</td><td id="correctAnswers">-</td></tr>
-          <tr><td>Total Marks</td><td id="totalMarks">-</td></tr>
-          <tr><td>Percentage</td><td id="percentage">-</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
 </html>
