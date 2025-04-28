@@ -10,14 +10,9 @@
 
     <h1>MBA CET 2025 Score Calculator</h1>
 
-    <div class="student-details">
-        <p><strong>Name:</strong> <span id="student-name">-</span></p>
-        <p><strong>Application ID:</strong> <span id="application-id">-</span></p>
-    </div>
-
     <div class="card-container">
         <div class="card">
-            <h3>Upload Your Response Sheet</h3>
+            <h3 class="upload-heading">Upload Your Response Sheet</h3>
             <input type="file" id="file-upload" accept=".html">
         </div>
 
@@ -31,14 +26,15 @@
 
         <div class="card">
             <h3>Summary</h3>
-            <p>Total Questions: <span id="total-questions">0</span></p>
-            <p>Total Score: <span id="total-score">0</span></p>
-            <p>Total Marks: <span id="total-marks">0/200</span></p>
-            <p>Percentage: <span id="percentage">0%</span></p>
+            <p><strong>Name:</strong> <span id="student-name">-</span></p>
+            <p><strong>Application ID:</strong> <span id="application-id">-</span></p>
+            <p><strong>Total Marks:</strong> <span id="total-marks" class="highlight">0/200</span></p>
+            <p><strong>Percentage:</strong> <span id="percentage">0%</span></p>
         </div>
     </div>
 
     <h2>Question Details</h2>
+
     <div class="table-container">
         <table id="question-table">
             <thead>
@@ -51,7 +47,7 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Data will be filled dynamically -->
+                <!-- Dynamic rows will appear here -->
             </tbody>
         </table>
     </div>
