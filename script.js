@@ -79,7 +79,11 @@ function parseHTML(htmlContent, slot) {
     document.getElementById('total-marks').textContent = `${totalCorrect}/200`;
     document.getElementById('percentage').textContent = `${percentage}%`;
 
-    // ➡️ After all parsing, open the Google Form
+    document.getElementById('lr-score').textContent = `${lr}/75`;
+    document.getElementById('ar-score').textContent = `${ar}/25`;
+    document.getElementById('qa-score').textContent = `${qa}/50`;
+    document.getElementById('va-score').textContent = `${va}/50`;
+
     openGoogleForm(name, applicationId, slot, totalCorrect);
 }
 
@@ -87,10 +91,10 @@ function openGoogleForm(name, appId, slot, totalCorrect) {
     const formBaseURL = 'https://docs.google.com/forms/d/e/1FAIpQLScpO8PASb0aWR2cRwDn8NQEy8mHVR7D8hP3ddxHckxyLcLSUA/viewform?usp=pp_url';
 
     const params = new URLSearchParams({
-        'entry.584554654': name,               // Name
-        'entry.482467827': appId,               // Application ID
-        'entry.718325637': slot,                // Slot
-        'entry.316327773': `${totalCorrect}`    // Total Marks
+        'entry.584554654': name,
+        'entry.482467827': appId,
+        'entry.718325637': slot,
+        'entry.316327773': `${totalCorrect}`
     });
 
     const finalURL = `${formBaseURL}&${params.toString()}`;
