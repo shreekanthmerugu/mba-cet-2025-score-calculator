@@ -12,7 +12,7 @@ h1 {
 }
 
 .upload-heading {
-    color: #ff4d4d; /* Red color */
+    color: #ff4d4d; /* Red color for Upload Heading */
 }
 
 .card-container {
@@ -80,6 +80,7 @@ td.is-correct-yes {
     color: #00ff00;
     font-weight: bold;
 }
+
 td.is-correct-no {
     color: #ff4d4d;
     font-weight: bold;
