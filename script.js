@@ -14,17 +14,23 @@ function parseHTML(html) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
 
-  // Name and Application ID
+  // Fetch Student Name and Application ID
   const userInfo = doc.querySelector('.nav-link.dropdown-toggle span')?.innerText.trim() || "Unknown";
-  const [applicationId, ...nameParts] = userInfo.split(' - ');
-  const name = nameParts.join(' ');
+  let applicationId = "Unknown";
+  let name = "Unknown";
+
+  if (userInfo.includes(' - ')) {
+    const [id, ...nameParts] = userInfo.split(' - ');
+    applicationId = id.trim();
+    name = nameParts.join(' ').trim();
+  }
 
   document.getElementById('studentName').innerText = name || 'Unknown';
   document.getElementById('applicationId').innerText = applicationId || 'Unknown';
   document.getElementById('student-info').classList.remove('hidden');
 
-  // Questions
-  const rows = Array.from(doc.querySelectorAll('#tblObjection tr')).slice(1);
+  // Questions and Answers Parsing
+  const rows = Array.from(doc.querySelectorAll('#tblObjection tbody tr'));
   const questionRows = document.getElementById('questionRows');
   questionRows.innerHTML = "";
 
@@ -37,10 +43,12 @@ function parseHTML(html) {
     const cells = row.querySelectorAll('td');
     if (cells.length < 4) return;
 
-    const questionId = cells[0].innerText.trim();
-    const subject = cells[1].innerText.trim();
-    const correctOption = cells[2].querySelector('span:nth-child(1)')?.innerText.trim();
-    const userOption = cells[2].querySelector('span:nth-child(2)')?.innerText.trim();
+    const questionId = cells[0]?.innerText.trim();
+    const subject = cells[1]?.innerText.trim();
+    const correctOption = cells[2]?.innerText.trim();
+    const userOption = cells[3]?.innerText.trim();
+
+    if (!correctOption || !userOption) return;
 
     const isCorrect = correctOption === userOption;
 
@@ -74,7 +82,7 @@ function parseHTML(html) {
 
   document.getElementById('questions-table').classList.remove('hidden');
 
-  // Summary
+  // Summary Table
   const totalMarks = correctAnswers;
   const summaryTable = document.getElementById('summary-table');
   summaryTable.innerHTML = `
