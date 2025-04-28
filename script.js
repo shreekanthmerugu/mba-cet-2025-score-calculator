@@ -29,7 +29,7 @@ function parseHTML(html) {
   document.getElementById('applicationId').innerText = applicationId || 'Unknown';
   document.getElementById('student-info').classList.remove('hidden');
 
-  // Questions and Answers Parsing
+  // Parse Questions
   const rows = Array.from(doc.querySelectorAll('#tblObjection tbody tr'));
   const questionRows = document.getElementById('questionRows');
   questionRows.innerHTML = "";
@@ -39,13 +39,13 @@ function parseHTML(html) {
   let logical = 0, abstract = 0, quant = 0, verbal = 0;
   let logicalCorrect = 0, abstractCorrect = 0, quantCorrect = 0, verbalCorrect = 0;
 
-  rows.forEach((row, index) => {
+  let questionCounter = 1; // Important: start from 1
+
+  rows.forEach((row) => {
     const cells = row.querySelectorAll('td');
     if (cells.length < 3) return;
 
-    const questionId = cells[0]?.innerText.trim();
     const subject = cells[1]?.innerText.trim();
-    
     const optionsCell = cells[2];
     const spans = optionsCell.querySelectorAll('span');
     const correctOption = spans[0]?.innerText.trim();
@@ -55,6 +55,7 @@ function parseHTML(html) {
 
     const isCorrect = correctOption === userOption;
 
+    // Sectionwise counters
     if (subject.includes('Logical')) {
       logical++;
       if (isCorrect) logicalCorrect++;
@@ -74,18 +75,20 @@ function parseHTML(html) {
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${index + 1}</td>
+      <td>${questionCounter}</td>
       <td>${subject}</td>
       <td>${correctOption}</td>
       <td>${userOption}</td>
       <td><span class="${isCorrect ? 'yes' : 'no'}">${isCorrect ? 'Yes' : 'No'}</span></td>
     `;
     questionRows.appendChild(tr);
+
+    questionCounter++; // Move to next number manually
   });
 
   document.getElementById('questions-table').classList.remove('hidden');
 
-  // Summary Table
+  // Summary Section
   const totalMarks = correctAnswers;
   const summaryTable = document.getElementById('summary-table');
   summaryTable.innerHTML = `
