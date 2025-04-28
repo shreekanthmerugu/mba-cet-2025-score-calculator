@@ -10,25 +10,23 @@ function calculateScore(htmlString) {
   let quantCorrect = 0;
   let verbalCorrect = 0;
 
-  const rows = doc.querySelectorAll('table.table.table-responsive.table-bordered.center tr');
+  const tables = doc.querySelectorAll('table.table-bordered.center');
 
-  let questionNumber = 1; // We assume questions are ordered 1 to 200.
+  let questionNumber = 1;
 
-  rows.forEach(row => {
-    const cells = row.querySelectorAll('td');
-    if (cells.length === 2) {
-      const correctCell = cells[0];
-      const candidateCell = cells[1];
-
-      const correctOption = correctCell.querySelector('span')?.textContent.trim();
-      const candidateResponse = candidateCell.querySelector('span')?.textContent.trim();
+  tables.forEach(table => {
+    const spans = table.querySelectorAll('span');
+    if (spans.length >= 2) {
+      const correctOption = spans[0].textContent.trim();
+      const candidateResponse = spans[1].textContent.trim();
 
       if (correctOption && candidateResponse) {
         totalQuestions++;
+
         if (correctOption === candidateResponse) {
           correctAnswers++;
 
-          // Section wise counting
+          // Section wise bifurcation based on question number
           if (questionNumber <= 75) {
             logicalCorrect++;
           } else if (questionNumber <= 100) {
@@ -39,8 +37,8 @@ function calculateScore(htmlString) {
             verbalCorrect++;
           }
         }
+        questionNumber++;
       }
-      questionNumber++;
     }
   });
 
@@ -58,7 +56,7 @@ function calculateScore(htmlString) {
     <h3>🏆 Total Marks: ${totalMarks}/200</h3>
 
     <div style="margin-top:20px;">
-      <a href="https://forms.gle/H6CqWfuL4bGkJkXT9" target="_blank" class="upload-btn">Submit Your Response Sheet</a>
+      <a href="https://forms.gle/bJuYM9xk4tPzSVXu9" target="_blank" class="upload-btn">Submit Your Response Sheet</a>
     </div>
   `;
 
