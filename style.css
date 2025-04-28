@@ -13,6 +13,10 @@ h1 {
   margin-bottom: 30px;
 }
 
+.student-info {
+  margin-bottom: 30px;
+}
+
 .container {
   display: flex;
   flex-wrap: wrap;
