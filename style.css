@@ -1,51 +1,68 @@
+/* Import clean font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
 /* Global Settings */
 body {
     margin: 0;
+    padding: 0;
     font-family: 'Poppins', sans-serif;
     background-color: #0e0e0e;
-    color: white;
+    color: #ffffff;
 }
 
 /* Heading */
 h1 {
     text-align: center;
-    margin-top: 20px;
+    margin: 20px 0;
     font-size: 32px;
-    font-weight: bold;
 }
 
-/* Top Section Container */
-#top-container {
+/* Student Details Section */
+#student-details {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#student-details p {
+    margin: 5px 0;
+    font-size: 18px;
+}
+
+/* Top Section with Upload and Summaries */
+.top-container {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    flex-wrap: wrap;
     gap: 30px;
-    margin-top: 30px;
+    flex-wrap: wrap;
     margin-bottom: 30px;
 }
 
-/* Card Style */
+/* Card Box Design */
 .card {
     background-color: #1a1a1a;
-    padding: 25px;
+    padding: 20px 25px;
     border-radius: 12px;
-    width: 320px;
-    min-height: 220px;
+    min-width: 280px;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.05);
 }
 
-/* Upload Card */
+.card h2 {
+    font-size: 20px;
+    color: #ffc107;
+    margin-bottom: 15px;
+}
+
+/* Upload Card Specific */
 #upload-card label {
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-size: 18px;
-    font-weight: 600;
-    color: #ffc107;
+    font-weight: bold;
 }
 
 #upload-card input[type="file"] {
+    margin-top: 10px;
     background: #333;
     color: white;
     padding: 8px;
@@ -53,79 +70,61 @@ h1 {
     width: 90%;
 }
 
-/* Name and Application ID section */
-#student-details {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 18px;
-}
-
-#student-details strong {
-    color: #ffc107;
-}
-
-/* Summary Titles */
-.card h2 {
-    font-size: 20px;
-    margin-bottom: 15px;
-    font-weight: 700;
-}
-
-/* Summary Points */
+/* Summary Texts */
 .card p {
     margin: 8px 0;
     font-size: 16px;
 }
 
-/* Question Details Section */
+/* Table Styling */
 #question-table {
     width: 90%;
-    margin: 30px auto;
+    margin: 0 auto 40px auto;
     border-collapse: collapse;
     background-color: #1a1a1a;
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
 }
 
-/* Table Headings */
+/* Table Header */
 #question-table th {
     background-color: #222;
-    padding: 15px;
-    font-size: 16px;
     color: #ffc107;
+    padding: 14px 10px;
+    font-size: 16px;
 }
 
-/* Table Rows */
+/* Table Data */
 #question-table td {
+    padding: 12px 10px;
     text-align: center;
-    padding: 12px;
-    font-size: 15px;
     border-bottom: 1px solid #333;
+    font-size: 15px;
 }
 
-/* Correct/Incorrect Tag Styling */
+/* Correct / Incorrect Badge */
 .correct {
     background-color: #28a745;
-    color: white;
     padding: 5px 12px;
-    border-radius: 8px;
-    display: inline-block;
-    font-size: 14px;
-    font-weight: bold;
+    border-radius: 10px;
+    font-weight: 600;
 }
 
 .incorrect {
     background-color: #dc3545;
-    color: white;
     padding: 5px 12px;
-    border-radius: 8px;
-    display: inline-block;
-    font-size: 14px;
-    font-weight: bold;
+    border-radius: 10px;
+    font-weight: 600;
 }
 
-/* Small Texts */
-small {
-    font-size: 14px;
-    color: #ccc;
+/* Responsive */
+@media (max-width: 768px) {
+    .top-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #question-table {
+        font-size: 13px;
+    }
 }
