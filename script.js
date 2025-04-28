@@ -31,14 +31,19 @@ function parseHTML(htmlContent, slot) {
     }
 
     const rows = Array.from(doc.querySelectorAll('tbody tr'));
+    const tbody = document.querySelector('#question-table tbody');
+    tbody.innerHTML = '';
+
     let lr = 0, ar = 0, qa = 0, va = 0, totalCorrect = 0;
     const totalQuestions = 200;
 
     rows.forEach(row => {
         const cells = row.querySelectorAll('td');
         if (cells.length >= 3) {
+            const questionId = cells[0].innerText.trim();
             const subject = cells[1].innerText.trim();
             const optionsText = cells[2].innerText.trim();
+
             const correctOptionMatch = optionsText.match(/Correct Option:\s*(\d+)/);
             const candidateResponseMatch = optionsText.match(/Candidate Response:\s*(\d+)/);
 
@@ -54,6 +59,16 @@ function parseHTML(htmlContent, slot) {
                 else if (subject === "Verbal Ability") va++;
                 totalCorrect++;
             }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${questionId}</td>
+                <td>${subject}</td>
+                <td>${correctOption}</td>
+                <td>${userOption}</td>
+                <td class="${isCorrect === 'Yes' ? 'is-correct-yes' : 'is-correct-no'}">${isCorrect}</td>
+            `;
+            tbody.appendChild(tr);
         }
     });
 
@@ -71,15 +86,15 @@ function openGoogleForm(name, appId, lr, ar, qa, va, totalCorrect, percentage, s
     const formBaseURL = 'https://docs.google.com/forms/d/e/1FAIpQLScIt8p31x-8Bgyet5BORRUVxYgmFTBF02vxXDzxAZOmTTYOqA/viewform?usp=pp_url';
 
     const params = new URLSearchParams({
-        'entry.1165774944': name,                      // Name
-        'entry.2111563569': appId,                     // Application ID
-        'entry.1395151553': `${lr}`,                   // Logical Reasoning Score
-        'entry.1970283220': `${ar}`,                   // Abstract Reasoning Score
-        'entry.1492314338': `${qa}`,                   // Quantitative Aptitude Score
-        'entry.1560827722': `${va}`,                   // Verbal Ability Score
-        'entry.342759293': `${totalCorrect}`,           // Total Marks
-        'entry.500154001': `${percentage}%`,           // Percentage
-        'entry.1729089274': slot                       // Slot
+        'entry.1165774944': name,
+        'entry.2111563569': appId,
+        'entry.1395151553': `${lr}`,
+        'entry.1970283220': `${ar}`,
+        'entry.1492314338': `${qa}`,
+        'entry.1560827722': `${va}`,
+        'entry.342759293': `${totalCorrect}`,
+        'entry.500154001': `${percentage}%`,
+        'entry.1729089274': slot
     });
 
     const finalURL = `${formBaseURL}&${params.toString()}`;
