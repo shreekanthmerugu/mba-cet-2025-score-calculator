@@ -16,7 +16,6 @@ function parseHTML(htmlContent) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlContent, 'text/html');
 
-    // Fetch Name and Application ID
     const nameElement = doc.querySelector('.col-12.text-center h5');
     const applicationIdElement = doc.querySelector('.col-12.text-center p');
 
@@ -59,7 +58,7 @@ function parseHTML(htmlContent) {
                 <td>${subject}</td>
                 <td>${correctOption}</td>
                 <td>${userOption}</td>
-                <td>${isCorrect}</td>
+                <td class="${isCorrect === 'Yes' ? 'is-correct-yes' : 'is-correct-no'}">${isCorrect}</td>
             `;
             tbody.appendChild(tr);
         }
@@ -72,8 +71,6 @@ function parseHTML(htmlContent) {
     document.getElementById('qa-score').innerText = `${qa}/50`;
     document.getElementById('va-score').innerText = `${va}/50`;
 
-    document.getElementById('total-questions').innerText = totalQuestions;
-    document.getElementById('total-score').innerText = totalCorrect;
     document.getElementById('total-marks').innerText = `${totalCorrect}/200`;
     document.getElementById('percentage').innerText = `${percentage}%`;
 }
