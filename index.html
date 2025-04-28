@@ -2,60 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MBA CET 2025 Score Calculator</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>MBA CET 2025 Score Calculator</h1>
 
-        <div id="student-info" class="card hidden">
-            <p><strong>Name:</strong> <span id="student-name"></span></p>
-            <p><strong>Application ID:</strong> <span id="application-id"></span></p>
-        </div>
+    <h1>MBA CET 2025 Score Calculator</h1>
 
-        <div class="card upload-card">
-            <h2>Upload Your Response Sheet</h2>
-            <input type="file" id="fileInput" accept=".html">
-        </div>
-
-        <div class="cards-grid hidden" id="summary-section">
-            <div class="card">
-                <h3>Section Wise Summary</h3>
-                <p>Logical Reasoning: <span id="logical"></span></p>
-                <p>Abstract Reasoning: <span id="abstract"></span></p>
-                <p>Quantitative Aptitude: <span id="quant"></span></p>
-                <p>Verbal Ability: <span id="verbal"></span></p>
-            </div>
-
-            <div class="card">
-                <h3>Summary</h3>
-                <p>Total Questions: <span id="total-questions"></span></p>
-                <p>Total Score: <span id="total-score"></span></p>
-                <p>Total Marks: <span id="total-marks"></span></p>
-                <p>Percentage: <span id="percentage"></span></p>
-            </div>
-        </div>
-
-        <div class="card hidden" id="questions-card">
-            <h3>Question Details</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Question ID</th>
-                        <th>Subject</th>
-                        <th>Correct Option</th>
-                        <th>User Option</th>
-                        <th>Is Correct</th>
-                    </tr>
-                </thead>
-                <tbody id="questions-body"></tbody>
-            </table>
-        </div>
-
+    <div id="student-info">
+        <p><strong>Name:</strong> <span id="student-name">SHREEKANTH MERUGU</span></p>
+        <p><strong>Application ID:</strong> <span id="application-id">2501155075</span></p>
     </div>
 
-    <script src="script.js"></script>
+    <div class="cards-container">
+        <div class="card" id="upload-box">
+            <h2>Upload Your Response Sheet</h2>
+            <input type="file" id="file-upload">
+        </div>
+
+        <div class="card" id="section-summary">
+            <h2>Section Wise Summary</h2>
+            <p>Logical Reasoning: 39/75</p>
+            <p>Abstract Reasoning: 17/25</p>
+            <p>Quantitative Aptitude: 15/50</p>
+            <p>Verbal Ability: 19/50</p>
+        </div>
+
+        <div class="card" id="total-summary">
+            <h2>Summary</h2>
+            <p>Total Questions: 200</p>
+            <p>Total Score: 90</p>
+            <p>Total Marks: 90/200</p>
+            <p>Percentage: 45.00%</p>
+        </div>
+    </div>
+
+    <h2 style="text-align:center; margin-top:40px;">Question Details</h2>
+
+    <div class="table-container">
+        <table id="question-table">
+            <thead>
+                <tr>
+                    <th>Question ID</th>
+                    <th>Subject</th>
+                    <th>Correct Option</th>
+                    <th>User Option</th>
+                    <th>Is Correct</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table rows generated dynamically here -->
+            </tbody>
+        </table>
+    </div>
+
+<script src="script.js"></script>
 </body>
 </html>
