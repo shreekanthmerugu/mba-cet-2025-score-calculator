@@ -31,19 +31,13 @@ function parseHTML(htmlContent, slot) {
     }
 
     const rows = Array.from(doc.querySelectorAll('tbody tr'));
-    const tbody = document.querySelector('#question-table tbody');
-    tbody.innerHTML = '';
-
-    let lr = 0, ar = 0, qa = 0, va = 0, totalCorrect = 0;
+    let totalCorrect = 0;
     const totalQuestions = 200;
 
     rows.forEach(row => {
         const cells = row.querySelectorAll('td');
         if (cells.length >= 3) {
-            const questionId = cells[0].innerText.trim();
-            const subject = cells[1].innerText.trim();
             const optionsText = cells[2].innerText.trim();
-
             const correctOptionMatch = optionsText.match(/Correct Option:\s*(\d+)/);
             const candidateResponseMatch = optionsText.match(/Candidate Response:\s*(\d+)/);
 
@@ -51,50 +45,26 @@ function parseHTML(htmlContent, slot) {
             const userOption = candidateResponseMatch ? candidateResponseMatch[1] : '-';
 
             const isCorrect = (correctOption === userOption) ? 'Yes' : 'No';
-
-            if (isCorrect === 'Yes') {
-                if (subject === "Logical Reasoning") lr++;
-                else if (subject === "Abstract Reasoning") ar++;
-                else if (subject === "Quantitative Aptitude") qa++;
-                else if (subject === "Verbal Ability") va++;
-                totalCorrect++;
-            }
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${questionId}</td>
-                <td>${subject}</td>
-                <td>${correctOption}</td>
-                <td>${userOption}</td>
-                <td class="${isCorrect === 'Yes' ? 'is-correct-yes' : 'is-correct-no'}">${isCorrect}</td>
-            `;
-            tbody.appendChild(tr);
+            if (isCorrect === 'Yes') totalCorrect++;
         }
     });
-
-    const percentage = ((totalCorrect / totalQuestions) * 100).toFixed(2);
 
     document.getElementById('name').textContent = name;
     document.getElementById('appId').textContent = applicationId;
     document.getElementById('total-marks').textContent = `${totalCorrect}/200`;
-    document.getElementById('percentage').textContent = `${percentage}%`;
+    document.getElementById('percentage').textContent = `${((totalCorrect / totalQuestions) * 100).toFixed(2)}%`;
 
-    openGoogleForm(name, applicationId, lr, ar, qa, va, totalCorrect, percentage, slot);
+    openGoogleForm(name, applicationId, slot, totalCorrect);
 }
 
-function openGoogleForm(name, appId, lr, ar, qa, va, totalCorrect, percentage, slot) {
-    const formBaseURL = 'https://docs.google.com/forms/d/e/1FAIpQLScIt8p31x-8Bgyet5BORRUVxYgmFTBF02vxXDzxAZOmTTYOqA/viewform?usp=pp_url';
+function openGoogleForm(name, appId, slot, totalCorrect) {
+    const formBaseURL = 'https://docs.google.com/forms/d/e/1FAIpQLScpO8PASb0aWR2cRwDn8NQEy8mHVR7D8hP3ddxHckxyLcLSUA/viewform?usp=pp_url';
 
     const params = new URLSearchParams({
-        'entry.1165774944': name,
-        'entry.2111563569': appId,
-        'entry.1395151553': `${lr}`,
-        'entry.1970283220': `${ar}`,
-        'entry.1492314338': `${qa}`,
-        'entry.1560827722': `${va}`,
-        'entry.342759293': `${totalCorrect}`,
-        'entry.500154001': `${percentage}%`,
-        'entry.1729089274': slot
+        'entry.584554654': name,               // Name
+        'entry.482467827': appId,               // Application ID
+        'entry.718325637': slot,                // Slot
+        'entry.316327773': `${totalCorrect}`    // Total Marks
     });
 
     const finalURL = `${formBaseURL}&${params.toString()}`;
