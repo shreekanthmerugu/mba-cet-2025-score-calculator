@@ -11,7 +11,6 @@
     <h1>MBA CET 2025 Score Calculator</h1>
 
     <div class="card-container">
-
         <div class="card">
             <h3>Select Your Slot</h3>
             <select id="slot-selection" required>
@@ -38,6 +37,13 @@
             <p><strong>Percentage:</strong> <span id="percentage">0%</span></p>
         </div>
 
+        <div class="card">
+            <h3>Section Wise Summary</h3>
+            <p>Logical Reasoning: <span id="lr-score">0/75</span></p>
+            <p>Abstract Reasoning: <span id="ar-score">0/25</span></p>
+            <p>Quantitative Aptitude: <span id="qa-score">0/50</span></p>
+            <p>Verbal Ability: <span id="va-score">0/50</span></p>
+        </div>
     </div>
 
     <h2>Question Details</h2>
@@ -54,7 +60,7 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Filled dynamically -->
+                <!-- Table rows will be dynamically filled -->
             </tbody>
         </table>
     </div>
