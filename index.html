@@ -3,14 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MBA CET 2025 Score Calculator</title>
+    <title>MBA CET 2025 Score Calculator | The Top Percentile</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- Top Branding Banner -->
+    <div class="top-banner">
+        <img src="https://via.placeholder.com/60x60.png?text=TTP" alt="The Top Percentile Logo" class="logo">
+        <h2 class="brand-text">Powered by The Top Percentile - By the Toppers & For the Toppers</h2>
+    </div>
+
     <h1>MBA CET 2025 Score Calculator</h1>
 
     <div class="card-container">
+
         <div class="card">
             <h3>Select Your Slot</h3>
             <select id="slot-selection" required>
@@ -27,6 +34,7 @@
         <div class="card">
             <h3 class="upload-heading">Upload Your Response Sheet</h3>
             <input type="file" id="file-upload" accept=".html">
+            <p class="small-note">💡 Tip: Accuracy powered by The Top Percentile Score Tracker</p>
         </div>
 
         <div class="card">
@@ -44,6 +52,7 @@
             <p>Quantitative Aptitude: <span id="qa-score">0/50</span></p>
             <p>Verbal Ability: <span id="va-score">0/50</span></p>
         </div>
+
     </div>
 
     <h2>Question Details</h2>
@@ -60,10 +69,17 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Table rows will be dynamically filled -->
+                <!-- Table Rows dynamically -->
             </tbody>
         </table>
     </div>
+
+    <!-- Footer -->
+    <footer>
+        <p class="footer-text">
+            Made with ❤️ by <strong>The Top Percentile</strong> | Helping Students Achieve Top Ranks in MBA CET 2025
+        </p>
+    </footer>
 
 <script src="script.js"></script>
 </body>
