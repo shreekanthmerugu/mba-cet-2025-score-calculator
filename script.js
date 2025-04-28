@@ -17,70 +17,63 @@ function parseHTML(htmlContent) {
     const doc = parser.parseFromString(htmlContent, 'text/html');
 
     // Fetch Name and Application ID
-    const nameElement = doc.querySelector('div.col-12.text-center h5');
-    const applicationIdElement = doc.querySelector('div.col-12.text-center p');
+    const nameElement = doc.querySelector('.col-12.text-center h5');
+    const applicationIdElement = doc.querySelector('.col-12.text-center p');
 
-    if (nameElement && applicationIdElement) {
-        document.getElementById('student-name').textContent = nameElement.textContent.trim();
-        document.getElementById('application-id').textContent = applicationIdElement.textContent.trim().split(":")[1].trim();
-    }
+    document.getElementById('student-name').textContent = nameElement ? nameElement.innerText.trim() : '-';
+    document.getElementById('application-id').textContent = applicationIdElement ? applicationIdElement.innerText.trim().split(':')[1] : '-';
 
-    // Fetch Question Table
     const rows = Array.from(doc.querySelectorAll('tbody tr'));
-
-    let lr = 0, ar = 0, qa = 0, va = 0;
-    let totalScore = 0;
-
     const tbody = document.querySelector('#question-table tbody');
     tbody.innerHTML = '';
 
+    let lr = 0, ar = 0, qa = 0, va = 0, totalCorrect = 0;
+    const totalQuestions = 200;
+
     rows.forEach(row => {
         const cells = row.querySelectorAll('td');
-        if (cells.length >= 5) {
+        if (cells.length >= 3) {
             const questionId = cells[0].innerText.trim();
             const subject = cells[1].innerText.trim();
-            const correctOption = cells[2].innerText.trim();
-            const userOption = cells[3].innerText.trim();
-            const isCorrect = cells[4].innerText.trim();
+            const optionsText = cells[2].innerText.trim();
 
-            // Count subject-wise correct
-            if (isCorrect.toLowerCase() === 'yes') {
-                if (subject === 'Logical Reasoning') lr++;
-                else if (subject === 'Abstract Reasoning') ar++;
-                else if (subject === 'Quantitative Aptitude') qa++;
-                else if (subject === 'Verbal Ability') va++;
+            const correctOptionMatch = optionsText.match(/Correct Option:\s*(\d+)/);
+            const candidateResponseMatch = optionsText.match(/Candidate Response:\s*(\d+)/);
+
+            const correctOption = correctOptionMatch ? correctOptionMatch[1] : '-';
+            const userOption = candidateResponseMatch ? candidateResponseMatch[1] : '-';
+
+            const isCorrect = (correctOption === userOption) ? 'Yes' : 'No';
+
+            if (isCorrect === 'Yes') {
+                if (subject === "Logical Reasoning") lr++;
+                else if (subject === "Abstract Reasoning") ar++;
+                else if (subject === "Quantitative Aptitude") qa++;
+                else if (subject === "Verbal Ability") va++;
+                totalCorrect++;
             }
 
-            // Count total score
-            if (isCorrect.toLowerCase() === 'yes') totalScore++;
-
-            // Add row to table
-            const newRow = `
-                <tr>
-                    <td>${questionId}</td>
-                    <td>${subject}</td>
-                    <td>${correctOption}</td>
-                    <td>${userOption}</td>
-                    <td>${isCorrect}</td>
-                </tr>
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${questionId}</td>
+                <td>${subject}</td>
+                <td>${correctOption}</td>
+                <td>${userOption}</td>
+                <td>${isCorrect}</td>
             `;
-            tbody.innerHTML += newRow;
+            tbody.appendChild(tr);
         }
     });
 
-    const totalQuestions = 200;
-    const totalMarks = 200;
-    const percentage = ((totalScore / totalQuestions) * 100).toFixed(2) + '%';
+    const percentage = ((totalCorrect / totalQuestions) * 100).toFixed(2);
 
-    // Update Section Wise
-    document.getElementById('lr-score').textContent = lr;
-    document.getElementById('ar-score').textContent = ar;
-    document.getElementById('qa-score').textContent = qa;
-    document.getElementById('va-score').textContent = va;
+    document.getElementById('lr-score').innerText = `${lr}/75`;
+    document.getElementById('ar-score').innerText = `${ar}/25`;
+    document.getElementById('qa-score').innerText = `${qa}/50`;
+    document.getElementById('va-score').innerText = `${va}/50`;
 
-    // Update Summary
-    document.getElementById('total-questions').textContent = totalQuestions;
-    document.getElementById('total-score').textContent = totalScore;
-    document.getElementById('total-marks').textContent = totalScore + '/200';
-    document.getElementById('percentage').textContent = percentage;
+    document.getElementById('total-questions').innerText = totalQuestions;
+    document.getElementById('total-score').innerText = totalCorrect;
+    document.getElementById('total-marks').innerText = `${totalCorrect}/200`;
+    document.getElementById('percentage').innerText = `${percentage}%`;
 }
