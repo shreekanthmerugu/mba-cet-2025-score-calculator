@@ -1,35 +1,38 @@
-/* Import clean font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-/* Global Settings */
-body {
+* {
     margin: 0;
     padding: 0;
-    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+}
+
+body {
     background-color: #0e0e0e;
-    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    min-height: 100vh;
 }
 
 /* Heading */
 h1 {
     text-align: center;
-    margin: 20px 0;
+    padding: 30px 0 10px 0;
     font-size: 32px;
 }
 
-/* Student Details Section */
-#student-details {
+/* Student Info */
+#student-info {
     text-align: center;
-    margin-bottom: 20px;
-}
-
-#student-details p {
-    margin: 5px 0;
+    margin-bottom: 30px;
     font-size: 18px;
 }
 
-/* Top Section with Upload and Summaries */
-.top-container {
+#student-info p {
+    margin: 5px 0;
+}
+
+/* Cards Row */
+.cards-container {
     display: flex;
     justify-content: center;
     gap: 30px;
@@ -37,14 +40,14 @@ h1 {
     margin-bottom: 30px;
 }
 
-/* Card Box Design */
+/* Individual Card */
 .card {
     background-color: #1a1a1a;
-    padding: 20px 25px;
+    padding: 20px 30px;
     border-radius: 12px;
-    min-width: 280px;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.05);
+    width: 280px;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
 }
 
 .card h2 {
@@ -53,78 +56,70 @@ h1 {
     margin-bottom: 15px;
 }
 
-/* Upload Card Specific */
-#upload-card label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-#upload-card input[type="file"] {
+/* Upload Box */
+#upload-box input[type="file"] {
     margin-top: 10px;
-    background: #333;
-    color: white;
     padding: 8px;
+    background: #333;
+    color: #fff;
     border-radius: 8px;
     width: 90%;
 }
 
-/* Summary Texts */
-.card p {
-    margin: 8px 0;
-    font-size: 16px;
-}
-
-/* Table Styling */
-#question-table {
+/* Table Container */
+.table-container {
     width: 90%;
-    margin: 0 auto 40px auto;
-    border-collapse: collapse;
-    background-color: #1a1a1a;
-    border-radius: 10px;
-    overflow: hidden;
+    margin: 0 auto 50px auto;
 }
 
-/* Table Header */
+/* Table */
+#question-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+#question-table th, #question-table td {
+    padding: 12px 10px;
+    border: 1px solid #333;
+    text-align: center;
+}
+
 #question-table th {
     background-color: #222;
     color: #ffc107;
-    padding: 14px 10px;
-    font-size: 16px;
 }
 
-/* Table Data */
 #question-table td {
-    padding: 12px 10px;
-    text-align: center;
-    border-bottom: 1px solid #333;
-    font-size: 15px;
+    background-color: #1a1a1a;
 }
 
-/* Correct / Incorrect Badge */
+/* Correct / Incorrect Badges */
 .correct {
     background-color: #28a745;
     padding: 5px 12px;
-    border-radius: 10px;
+    border-radius: 8px;
     font-weight: 600;
+    color: #fff;
 }
 
 .incorrect {
     background-color: #dc3545;
     padding: 5px 12px;
-    border-radius: 10px;
+    border-radius: 8px;
     font-weight: 600;
+    color: #fff;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .top-container {
+    .cards-container {
         flex-direction: column;
         align-items: center;
     }
 
-    #question-table {
-        font-size: 13px;
+    .card {
+        width: 90%;
     }
 }
