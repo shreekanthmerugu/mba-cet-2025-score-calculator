@@ -11,8 +11,8 @@ h1 {
     margin-bottom: 20px;
 }
 
-.student-details {
-    margin-bottom: 20px;
+.upload-heading {
+    color: #ff4d4d; /* Red color */
 }
 
 .card-container {
@@ -66,18 +66,21 @@ td {
     border-bottom: 1px solid #333;
 }
 
-td:last-child {
-    font-weight: bold;
-}
-
 tr:hover {
     background-color: #333;
 }
 
-#question-table td:nth-child(5) {
-    color: #00ff00;
+.highlight {
+    color: #00ffcc;
+    font-weight: bold;
 }
 
-#question-table td:nth-child(5):contains("No") {
-    color: #ff4444;
+/* Green YES and Red NO */
+td.is-correct-yes {
+    color: #00ff00;
+    font-weight: bold;
+}
+td.is-correct-no {
+    color: #ff4d4d;
+    font-weight: bold;
 }
