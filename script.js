@@ -1,48 +1,44 @@
 document.getElementById('file-upload').addEventListener('change', handleFileUpload);
 
 function handleFileUpload(event) {
+    const slot = document.getElementById('slot-selection').value;
+    if (!slot) {
+        alert('⚠️ Please select your Slot before uploading the file!');
+        event.target.value = '';
+        return;
+    }
+
     const file = event.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = function(e) {
         const htmlContent = e.target.result;
-        parseHTML(htmlContent);
-        showSubmitButton();
+        parseHTML(htmlContent, slot);
     };
     reader.readAsText(file);
 }
 
-function parseHTML(htmlContent) {
+function parseHTML(htmlContent, slot) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlContent, 'text/html');
 
-    // ✅ Correctly fetch Name and Application ID
     const span = doc.querySelector('span.hidden-sm.hidden-md');
+    let applicationId = "-", name = "-";
     if (span) {
         const textContent = span.textContent.trim();
-        const [applicationId, name] = textContent.split(' - ').map(item => item.trim());
-        document.getElementById('appId').textContent = applicationId || "-";
-        document.getElementById('name').textContent = name || "-";
-    } else {
-        document.getElementById('appId').textContent = "-";
-        document.getElementById('name').textContent = "-";
+        [applicationId, name] = textContent.split(' - ').map(item => item.trim());
     }
 
     const rows = Array.from(doc.querySelectorAll('tbody tr'));
-    const tbody = document.querySelector('#question-table tbody');
-    tbody.innerHTML = '';
-
     let lr = 0, ar = 0, qa = 0, va = 0, totalCorrect = 0;
     const totalQuestions = 200;
 
     rows.forEach(row => {
         const cells = row.querySelectorAll('td');
         if (cells.length >= 3) {
-            const questionId = cells[0].innerText.trim();
             const subject = cells[1].innerText.trim();
             const optionsText = cells[2].innerText.trim();
-
             const correctOptionMatch = optionsText.match(/Correct Option:\s*(\d+)/);
             const candidateResponseMatch = optionsText.match(/Candidate Response:\s*(\d+)/);
 
@@ -58,36 +54,34 @@ function parseHTML(htmlContent) {
                 else if (subject === "Verbal Ability") va++;
                 totalCorrect++;
             }
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${questionId}</td>
-                <td>${subject}</td>
-                <td>${correctOption}</td>
-                <td>${userOption}</td>
-                <td class="${isCorrect === 'Yes' ? 'is-correct-yes' : 'is-correct-no'}">${isCorrect}</td>
-            `;
-            tbody.appendChild(tr);
         }
     });
 
     const percentage = ((totalCorrect / totalQuestions) * 100).toFixed(2);
 
-    document.getElementById('lr-score').innerText = `${lr}/75`;
-    document.getElementById('ar-score').innerText = `${ar}/25`;
-    document.getElementById('qa-score').innerText = `${qa}/50`;
-    document.getElementById('va-score').innerText = `${va}/50`;
+    document.getElementById('name').textContent = name;
+    document.getElementById('appId').textContent = applicationId;
+    document.getElementById('total-marks').textContent = `${totalCorrect}/200`;
+    document.getElementById('percentage').textContent = `${percentage}%`;
 
-    document.getElementById('total-marks').innerText = `${totalCorrect}/200`;
-    document.getElementById('percentage').innerText = `${percentage}%`;
+    openGoogleForm(name, applicationId, lr, ar, qa, va, totalCorrect, percentage, slot);
 }
 
-// ✅ This must be OUTSIDE parseHTML function
-function openGoogleForm() {
-    window.open('https://forms.gle/uct6bLZr1a65P1Dx7', '_blank');
-}
+function openGoogleForm(name, appId, lr, ar, qa, va, totalCorrect, percentage, slot) {
+    const formBaseURL = 'https://docs.google.com/forms/d/e/1FAIpQLScIt8p31x-8Bgyet5BORRUVxYgmFTBF02vxXDzxAZOmTTYOqA/viewform?usp=pp_url';
 
-// ✅ This must also be OUTSIDE parseHTML function
-function showSubmitButton() {
-    document.getElementById('submit-button').style.display = 'inline-block';
+    const params = new URLSearchParams({
+        'entry.1165774944': name,                      // Name
+        'entry.2111563569': appId,                     // Application ID
+        'entry.1395151553': `${lr}`,                   // Logical Reasoning Score
+        'entry.1970283220': `${ar}`,                   // Abstract Reasoning Score
+        'entry.1492314338': `${qa}`,                   // Quantitative Aptitude Score
+        'entry.1560827722': `${va}`,                   // Verbal Ability Score
+        'entry.342759293': `${totalCorrect}`,           // Total Marks
+        'entry.500154001': `${percentage}%`,           // Percentage
+        'entry.1729089274': slot                       // Slot
+    });
+
+    const finalURL = `${formBaseURL}&${params.toString()}`;
+    window.open(finalURL, '_blank');
 }
