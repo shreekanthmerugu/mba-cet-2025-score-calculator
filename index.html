@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>MBA CET 2025 Score Calculator</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -15,21 +16,21 @@
     <input type="file" id="fileInput" />
   </div>
 
-  <div class="student-info hidden" id="student-info">
-    <h2>Student Details</h2>
-    <table>
-      <tr><td>Name:</td><td id="studentName">Unknown</td></tr>
-      <tr><td>Application ID:</td><td id="applicationId">Unknown</td></tr>
-    </table>
-  </div>
+  <div class="section-container">
 
-  <div class="summary-section hidden" id="score-summary">
-    <h2>Summary</h2>
-    <table id="summary-table"></table>
-  </div>
+    <div class="student-info hidden" id="student-info">
+      <h2>Student Details</h2>
+      <table>
+        <tr><td>Name:</td><td id="studentName">Unknown</td></tr>
+        <tr><td>Application ID:</td><td id="applicationId">Unknown</td></tr>
+      </table>
+    </div>
 
-  <div id="screenshotMessage">
-    📸 Please take a screenshot of this page and upload it in the Google Form to verify your scores
+    <div class="summary-section hidden" id="score-summary">
+      <h2>Summary</h2>
+      <table id="summary-table"></table>
+    </div>
+
   </div>
 
   <button id="submitButton" onclick="window.open('https://your-google-form-link', '_blank')">
