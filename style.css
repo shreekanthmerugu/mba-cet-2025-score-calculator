@@ -1,91 +1,70 @@
-body {
-  background-color: #111;
-  color: white;
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
+/* Make container compact */
+.summary-section, .student-info {
+  background: #1c1c1c;
   padding: 20px;
-  text-align: center;
-}
-
-h1, h2 {
-  color: #f5f5f5;
-}
-
-.container {
-  max-width: 1100px;
-  margin: auto;
-}
-
-.upload-area {
-  border: 2px dashed #555;
-  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.05);
   margin-bottom: 20px;
-  background: #222;
-  border-radius: 12px;
+  width: 90%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.upload-area input {
-  margin-top: 15px;
-}
-
-.card {
-  background-color: #1e1e1e;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 12px;
-}
-
-table {
+/* Tables inside */
+.summary-section table, .student-info table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
 }
 
-td, th {
-  padding: 10px;
-  border: 1px solid #444;
+.summary-section td, .student-info td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #333;
+  font-size: 14px;
 }
 
-th {
-  background-color: #333;
-  color: #ffcc00;
-}
-
-td {
-  background-color: #222;
-}
-
-.screenshot-text {
-  margin-top: 20px;
+/* Bold key fields */
+.summary-section td:first-child, .student-info td:first-child {
   font-weight: bold;
-  color: #ffcc00;
+  color: #e0e0e0;
 }
 
-.submit-btn {
-  margin-top: 15px;
-  background-color: #ffcc00;
-  color: black;
-  padding: 10px 20px;
+/* Value fields */
+.summary-section td:last-child, .student-info td:last-child {
+  color: #ffffff;
+}
+
+/* Titles */
+.student-info h2, .summary-section h2 {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #f7c948;
+}
+
+/* Adjust the "Submit Response" button */
+#submitButton {
+  background-color: #ffd700;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 15px;
+  color: #000;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.hidden {
-  display: none;
+#submitButton:hover {
+  background-color: #ffcc00;
 }
 
-.yes {
-  background-color: #28a745;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: white;
-}
-
-.no {
-  background-color: #dc3545;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: white;
+/* Message Text */
+#screenshotMessage {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #ffcc00;
 }
