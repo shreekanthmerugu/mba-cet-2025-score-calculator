@@ -14,6 +14,19 @@ function parseHTML(html) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
 
+  // Fetch Student Name and Application ID
+  try {
+    const name = doc.querySelector('table tbody tr:nth-child(1) td:nth-child(2)')?.innerText.trim();
+    const applicationId = doc.querySelector('table tbody tr:nth-child(2) td:nth-child(2)')?.innerText.trim();
+
+    if (name) document.getElementById('studentName').innerText = name;
+    if (applicationId) document.getElementById('applicationId').innerText = applicationId;
+
+    document.getElementById('studentInfo').classList.remove('hidden');
+  } catch (error) {
+    console.log('Error fetching name and ID');
+  }
+
   const rows = Array.from(doc.querySelectorAll('#tblObjection tbody tr'));
   
   let totalQuestions = 0;
