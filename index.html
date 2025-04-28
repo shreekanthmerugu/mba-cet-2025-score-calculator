@@ -11,17 +11,23 @@
     <h1>MBA CET 2025 Score Calculator</h1>
 
     <div class="card-container">
+
         <div class="card">
-            <h3 class="upload-heading">Upload Your Response Sheet</h3>
-            <input type="file" id="file-upload" accept=".html">
+            <h3>Select Your Slot</h3>
+            <select id="slot-selection" required>
+                <option value="">-- Select Slot --</option>
+                <option value="Slot 1">Slot 1</option>
+                <option value="Slot 2">Slot 2</option>
+                <option value="Slot 3">Slot 3</option>
+                <option value="Slot 4">Slot 4</option>
+                <option value="Slot 5">Slot 5</option>
+                <option value="Slot 6">Slot 6</option>
+            </select>
         </div>
 
         <div class="card">
-            <h3>Section Wise Summary</h3>
-            <p>Logical Reasoning: <span id="lr-score">0/75</span></p>
-            <p>Abstract Reasoning: <span id="ar-score">0/25</span></p>
-            <p>Quantitative Aptitude: <span id="qa-score">0/50</span></p>
-            <p>Verbal Ability: <span id="va-score">0/50</span></p>
+            <h3 class="upload-heading">Upload Your Response Sheet</h3>
+            <input type="file" id="file-upload" accept=".html">
         </div>
 
         <div class="card">
@@ -31,10 +37,9 @@
             <p><strong>Total Marks:</strong> <span id="total-marks" class="highlight">0/200</span></p>
             <p><strong>Percentage:</strong> <span id="percentage">0%</span></p>
         </div>
+
     </div>
-    
-<button id="submit-button" style="display:none;" onclick="openGoogleForm()">Submit Your Response Sheet</button>
-    
+
     <h2>Question Details</h2>
 
     <div class="table-container">
@@ -49,7 +54,7 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Dynamic rows appear here -->
+                <!-- Filled dynamically -->
             </tbody>
         </table>
     </div>
