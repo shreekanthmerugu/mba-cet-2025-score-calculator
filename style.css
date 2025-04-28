@@ -85,3 +85,20 @@ td.is-correct-no {
     color: #ff4d4d;
     font-weight: bold;
 }
+
+#submit-button {
+    background-color: #ffcc00;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    color: black;
+    transition: background 0.3s;
+}
+
+#submit-button:hover {
+    background-color: #e6b800;
+}
