@@ -1,13 +1,13 @@
-document.getElementById('fileInput').addEventListener('change', handleFile);
+document.getElementById('file-upload').addEventListener('change', handleFileUpload);
 
-function handleFile(event) {
+function handleFileUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (e) => {
-        const content = e.target.result;
-        parseHTML(content);
+    reader.onload = function(e) {
+        const htmlContent = e.target.result;
+        parseHTML(htmlContent);
     };
     reader.readAsText(file);
 }
@@ -17,76 +17,70 @@ function parseHTML(htmlContent) {
     const doc = parser.parseFromString(htmlContent, 'text/html');
 
     // Fetch Name and Application ID
-    const userInfo = doc.querySelector(".navbar-nav span.hidden-sm.hidden-md");
-    if (userInfo) {
-        const fullText = userInfo.textContent.trim();
-        const parts = fullText.split(' - ');
-        document.getElementById('student-name').textContent = parts[1]?.trim() || "-";
-        document.getElementById('application-id').textContent = parts[0]?.trim() || "-";
-        document.getElementById('student-info').classList.remove('hidden');
+    const nameElement = doc.querySelector('div.col-12.text-center h5');
+    const applicationIdElement = doc.querySelector('div.col-12.text-center p');
+
+    if (nameElement && applicationIdElement) {
+        document.getElementById('student-name').textContent = nameElement.textContent.trim();
+        document.getElementById('application-id').textContent = applicationIdElement.textContent.trim().split(":")[1].trim();
     }
 
-    // Now parse Questions
-    const rows = [...doc.querySelectorAll("#tblObjection tbody tr")];
-    let logical = 0, abstract = 0, quant = 0, verbal = 0, totalCorrect = 0;
-    const tbody = document.getElementById('questions-body');
+    // Fetch Question Table
+    const rows = Array.from(doc.querySelectorAll('tbody tr'));
+
+    let lr = 0, ar = 0, qa = 0, va = 0;
+    let totalScore = 0;
+
+    const tbody = document.querySelector('#question-table tbody');
     tbody.innerHTML = '';
 
-    rows.forEach((row) => {
-        const cells = row.querySelectorAll("td");
-        if (cells.length < 3) return;
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 5) {
+            const questionId = cells[0].innerText.trim();
+            const subject = cells[1].innerText.trim();
+            const correctOption = cells[2].innerText.trim();
+            const userOption = cells[3].innerText.trim();
+            const isCorrect = cells[4].innerText.trim();
 
-        const questionId = cells[0].textContent.trim();
-        const subject = cells[1].textContent.trim();
-
-        let correctOption = "-";
-        let userOption = "-";
-
-        const allTexts = cells[2].innerText.split("\n");
-        allTexts.forEach(txt => {
-            if (txt.includes("Correct Option")) {
-                correctOption = txt.split(":")[1]?.trim();
+            // Count subject-wise correct
+            if (isCorrect.toLowerCase() === 'yes') {
+                if (subject === 'Logical Reasoning') lr++;
+                else if (subject === 'Abstract Reasoning') ar++;
+                else if (subject === 'Quantitative Aptitude') qa++;
+                else if (subject === 'Verbal Ability') va++;
             }
-            if (txt.includes("Candidate Response")) {
-                userOption = txt.split(":")[1]?.trim();
-            }
-        });
 
-        const isCorrect = correctOption === userOption ? "Yes" : "No";
+            // Count total score
+            if (isCorrect.toLowerCase() === 'yes') totalScore++;
 
-        if (isCorrect === "Yes") {
-            totalCorrect++;
-            if (subject === "Logical Reasoning") logical++;
-            if (subject === "Abstract Reasoning") abstract++;
-            if (subject === "Quantitative Aptitude") quant++;
-            if (subject === "Verbal Ability") verbal++;
+            // Add row to table
+            const newRow = `
+                <tr>
+                    <td>${questionId}</td>
+                    <td>${subject}</td>
+                    <td>${correctOption}</td>
+                    <td>${userOption}</td>
+                    <td>${isCorrect}</td>
+                </tr>
+            `;
+            tbody.innerHTML += newRow;
         }
-
-        const rowHTML = `
-            <tr>
-                <td>${questionId}</td>
-                <td>${subject}</td>
-                <td>${correctOption}</td>
-                <td>${userOption}</td>
-                <td>${isCorrect}</td>
-            </tr>
-        `;
-        tbody.insertAdjacentHTML('beforeend', rowHTML);
     });
 
-    // Fill Section Wise Summary
-    document.getElementById('logical').textContent = `${logical}/75`;
-    document.getElementById('abstract').textContent = `${abstract}/25`;
-    document.getElementById('quant').textContent = `${quant}/50`;
-    document.getElementById('verbal').textContent = `${verbal}/50`;
+    const totalQuestions = 200;
+    const totalMarks = 200;
+    const percentage = ((totalScore / totalQuestions) * 100).toFixed(2) + '%';
 
-    // Fill Overall Summary
-    document.getElementById('total-questions').textContent = "200";
-    document.getElementById('total-score').textContent = totalCorrect;
-    document.getElementById('total-marks').textContent = `${totalCorrect}/200`;
-    document.getElementById('percentage').textContent = ((totalCorrect/200)*100).toFixed(2) + "%";
+    // Update Section Wise
+    document.getElementById('lr-score').textContent = lr;
+    document.getElementById('ar-score').textContent = ar;
+    document.getElementById('qa-score').textContent = qa;
+    document.getElementById('va-score').textContent = va;
 
-    // Finally show everything
-    document.getElementById('summary-section').classList.remove('hidden');
-    document.getElementById('questions-card').classList.remove('hidden');
+    // Update Summary
+    document.getElementById('total-questions').textContent = totalQuestions;
+    document.getElementById('total-score').textContent = totalScore;
+    document.getElementById('total-marks').textContent = totalScore + '/200';
+    document.getElementById('percentage').textContent = percentage;
 }
