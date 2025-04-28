@@ -43,7 +43,7 @@ function parseHTML(html) {
     const cells = row.querySelectorAll('td');
     if (cells.length < 3) return;
 
-    const questionId = cells[0]?.innerText.trim(); // ✅ Actual Question ID
+    const questionId = cells[0]?.innerText.trim(); // Actual Question ID
     const subject = cells[1]?.innerText.trim();
     const optionsCell = cells[2];
     const spans = optionsCell.querySelectorAll('span');
