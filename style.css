@@ -11,8 +11,24 @@ h1 {
     margin-bottom: 20px;
 }
 
-.upload-heading {
-    color: #ff4d4d;
+/* Top Branding */
+.top-banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 60px;
+    height: auto;
+}
+
+.brand-text {
+    font-size: 1.2rem;
+    color: #ffcc00;
+    font-weight: bold;
 }
 
 .card-container {
@@ -44,6 +60,12 @@ select, input[type="file"] {
     color: #ffffff;
     border: 1px solid #333;
     border-radius: 5px;
+}
+
+.small-note {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: #cccccc;
 }
 
 h2 {
@@ -92,4 +114,16 @@ td.is-correct-yes {
 td.is-correct-no {
     color: #ff4d4d;
     font-weight: bold;
+}
+
+/* Footer */
+footer {
+    margin-top: 40px;
+    padding: 10px;
+    background-color: #1e1e1e;
+}
+
+.footer-text {
+    font-size: 0.9rem;
+    color: #aaaaaa;
 }
