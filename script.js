@@ -1,90 +1,77 @@
-document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+document.getElementById('fileInput').addEventListener('change', handleFile);
 
-function handleFileSelect(event) {
+function handleFile(event) {
     const file = event.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = (e) => {
         const content = e.target.result;
-        parseResponseSheet(content);
+        parseHTML(content);
     };
     reader.readAsText(file);
 }
 
-function parseResponseSheet(htmlContent) {
+function parseHTML(htmlContent) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlContent, 'text/html');
 
     // Fetch Name and Application ID
-    const navText = doc.querySelector('.navbar-nav .nav-link span.hidden-sm.hidden-md')?.textContent.trim();
-    if (navText) {
-        const [appId, ...nameParts] = navText.split(' - ');
+    const userInfo = doc.querySelector('.navbar-nav .nav-link span.hidden-sm.hidden-md');
+    if (userInfo) {
+        const [appId, ...nameParts] = userInfo.textContent.trim().split(' - ');
         document.getElementById('student-name').textContent = nameParts.join(' - ');
         document.getElementById('application-id').textContent = appId;
+        document.getElementById('student-info').classList.remove('hidden');
     }
 
-    document.getElementById('student-details').classList.remove('hidden');
-
-    // Parse question details
-    const rows = [...doc.querySelectorAll('#tblObjection tr')].slice(1); // skipping header
-
-    let correctCount = 0;
-    let logical = 0, abstract = 0, quant = 0, verbal = 0;
+    // Fetch Questions
+    const rows = [...doc.querySelectorAll('#tblObjection tbody tr')];
+    let totalCorrect = 0, logical = 0, abstract = 0, quant = 0, verbal = 0;
+    const tbody = document.getElementById('questions-body');
+    tbody.innerHTML = '';
 
     rows.forEach(row => {
         const cells = row.querySelectorAll('td');
-        if (cells.length < 2) return; // skip if invalid
+        if (cells.length === 0) return;
 
-        const questionId = cells[0].textContent.trim();
-        const section = cells[1].textContent.trim();
-        const correctOption = cells[2].querySelector('table tr td b:contains("Correct Option:") ~ span')?.textContent.trim();
-        const candidateResponse = cells[2].querySelector('table tr td b:contains("Candidate Response:") ~ span')?.textContent.trim();
+        const qId = cells[0].innerText.trim();
+        const subject = cells[1].innerText.trim();
+        const correctOption = cells[2].querySelector('b:contains("Correct Option:") ~ span')?.innerText.trim();
+        const userOption = cells[2].querySelector('b:contains("Candidate Response:") ~ span')?.innerText.trim();
 
-        let isCorrect = false;
-        if (correctOption && candidateResponse) {
-            isCorrect = correctOption === candidateResponse;
-            if (isCorrect) correctCount++;
-
-            switch (section) {
-                case 'Logical Reasoning':
-                    logical += isCorrect ? 1 : 0;
-                    break;
-                case 'Abstract Reasoning':
-                    abstract += isCorrect ? 1 : 0;
-                    break;
-                case 'Quantitative Aptitude':
-                    quant += isCorrect ? 1 : 0;
-                    break;
-                case 'Verbal Ability':
-                    verbal += isCorrect ? 1 : 0;
-                    break;
-            }
+        let correct = correctOption && userOption && correctOption === userOption ? 'Yes' : 'No';
+        if (correct === 'Yes') {
+            totalCorrect++;
+            if (subject === "Logical Reasoning") logical++;
+            if (subject === "Abstract Reasoning") abstract++;
+            if (subject === "Quantitative Aptitude") quant++;
+            if (subject === "Verbal Ability") verbal++;
         }
 
-        const rowHtml = `
+        const rowHTML = `
             <tr>
-                <td>${questionId}</td>
-                <td>${section}</td>
+                <td>${qId}</td>
+                <td>${subject}</td>
                 <td>${correctOption || '-'}</td>
-                <td>${candidateResponse || '-'}</td>
-                <td>${isCorrect ? 'Yes' : 'No'}</td>
+                <td>${userOption || '-'}</td>
+                <td>${correct}</td>
             </tr>
         `;
-        document.getElementById('questions-body').insertAdjacentHTML('beforeend', rowHtml);
+        tbody.insertAdjacentHTML('beforeend', rowHTML);
     });
 
-    document.getElementById('logical-reasoning').textContent = `${logical}/75`;
-    document.getElementById('abstract-reasoning').textContent = `${abstract}/25`;
-    document.getElementById('quantitative-aptitude').textContent = `${quant}/50`;
-    document.getElementById('verbal-ability').textContent = `${verbal}/50`;
+    // Fill Summary
+    document.getElementById('logical').textContent = `${logical}/75`;
+    document.getElementById('abstract').textContent = `${abstract}/25`;
+    document.getElementById('quant').textContent = `${quant}/50`;
+    document.getElementById('verbal').textContent = `${verbal}/50`;
 
     document.getElementById('total-questions').textContent = 200;
-    document.getElementById('correct-answers').textContent = correctCount;
-    document.getElementById('total-marks').textContent = `${correctCount}/200`;
-    document.getElementById('percentage').textContent = `${((correctCount/200)*100).toFixed(2)}%`;
+    document.getElementById('total-score').textContent = totalCorrect;
+    document.getElementById('total-marks').textContent = `${totalCorrect}/200`;
+    document.getElementById('percentage').textContent = `${((totalCorrect/200)*100).toFixed(2)}%`;
 
-    document.getElementById('section-summary').classList.remove('hidden');
-    document.getElementById('score-summary').classList.remove('hidden');
-    document.getElementById('questions-table').classList.remove('hidden');
+    document.getElementById('summary-section').classList.remove('hidden');
+    document.getElementById('questions-card').classList.remove('hidden');
 }
