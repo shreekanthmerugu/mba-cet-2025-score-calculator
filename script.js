@@ -16,17 +16,26 @@ function parseHTML(htmlContent) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlContent, 'text/html');
 
-    // Correctly fetch Name and Application ID
-    const studentDetails = doc.querySelector('.studentDetailsContainer');
+    // ✅ Correctly fetch Name and Application ID
+    const table = doc.querySelector('table.table.table-bordered');
     let name = '-';
     let applicationId = '-';
 
-    if (studentDetails) {
-        const nameElement = studentDetails.querySelector('h5');
-        const appIdElement = studentDetails.querySelector('p');
-
-        if (nameElement) name = nameElement.textContent.trim();
-        if (appIdElement) applicationId = appIdElement.textContent.trim().replace('Application ID:', '').trim();
+    if (table) {
+        const rows = table.querySelectorAll('tr');
+        rows.forEach(row => {
+            const th = row.querySelector('th');
+            const td = row.querySelector('td');
+            if (th && td) {
+                const heading = th.textContent.trim().toLowerCase();
+                const value = td.textContent.trim();
+                if (heading.includes('candidate name')) {
+                    name = value;
+                } else if (heading.includes('application id')) {
+                    applicationId = value;
+                }
+            }
+        });
     }
 
     document.getElementById('student-name').textContent = name;
